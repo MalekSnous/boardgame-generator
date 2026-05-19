@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Tuile Forêt — Ressource Bois</title>
+  <rect width="60" height="60" rx="4" ry="4" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <rect x="2" y="2" width="56" height="56" rx="3" ry="3" fill="#2A9D8F" fill-opacity="0.18" stroke="none"/>
+  <!-- Tronc central -->
+  <rect x="27" y="42" width="6" height="10" rx="1" fill="#8B5E3C"/>
+  <!-- Arbre central grand -->
+  <polygon points="30,8 42,32 18,32" fill="#2A9D8F" stroke="#1D3557" stroke-width="1.2"/>
+  <polygon points="30,16 40,36 20,36" fill="#2A9D8F" stroke="#1D3557" stroke-width="1"/>
+  <!-- Arbre gauche petit -->
+  <rect x="8" y="42" width="4" height="7" rx="1" fill="#8B5E3C"/>
+  <polygon points="10,20 19,36 1,36" fill="#2A9D8F" stroke="#1D3557" stroke-width="1"/>
+  <polygon points="10,26 17,39 3,39" fill="#2A9D8F" stroke="#1D3557" stroke-width="1"/>
+  <!-- Arbre droit petit -->
+  <rect x="48" y="42" width="4" height="7" rx="1" fill="#8B5E3C"/>
+  <polygon points="50,20 59,36 41,36" fill="#2A9D8F" stroke="#1D3557" stroke-width="1"/>
+  <polygon points="50,26 57,39 43,39" fill="#2A9D8F" stroke="#1D3557" stroke-width="1"/>
+  <!-- Sol -->
+  <rect x="2" y="50" width="56" height="8" rx="2" fill="#8B5E3C" fill-opacity="0.3"/>
+  <!-- Icône bois petite en bas -->
+  <rect x="24" y="53" width="12" height="3" rx="1" fill="#8B5E3C" opacity="0.8"/>
+  <!-- Label B -->
+  <text x="30" y="58" font-family="sans-serif" font-size="5" fill="#1D3557" text-anchor="middle" font-weight="bold">BOIS</text>
+</svg>

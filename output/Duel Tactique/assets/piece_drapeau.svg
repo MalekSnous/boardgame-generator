@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Pièce Drapeau - Duel Tactique</title>
+  <circle cx="30" cy="30" r="28" fill="#F1FAEE" stroke="#1D3557" stroke-width="2.5"/>
+  <rect x="26" y="12" width="3" height="36" fill="#1D3557" rx="1"/>
+  <polygon points="29,12 29,28 45,20" fill="#E63946" stroke="#1D3557" stroke-width="1"/>
+  <circle cx="30" cy="48" r="3" fill="#1D3557"/>
+</svg>

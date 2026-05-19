@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <title>Marqueur Premier Joueur</title>
+  <circle cx="25" cy="25" r="23" fill="#F4A261" stroke="#1D3557" stroke-width="2"/>
+  <circle cx="25" cy="25" r="18" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+  <polygon points="25,8 28,18 39,18 30,24 33,35 25,28 17,35 20,24 11,18 22,18" fill="#F4A261" stroke="#1D3557" stroke-width="1.2"/>
+  <text x="25" y="46" font-family="serif" font-size="7" font-weight="bold" fill="#1D3557" text-anchor="middle">1er</text>
+</svg>

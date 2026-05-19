@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Tuile Volcan - Zone Interdite</title>
+  <rect width="60" height="60" rx="4" ry="4" fill="#1D3557" stroke="#1D3557" stroke-width="1.5"/>
+  <rect x="2" y="2" width="56" height="56" rx="3" ry="3" fill="#2d1a0e" stroke="#E63946" stroke-width="1.5"/>
+  <!-- Volcan base -->
+  <polygon points="30,8 48,50 12,50" fill="#3a1a08" stroke="#E63946" stroke-width="1.2"/>
+  <polygon points="30,8 44,50 16,50" fill="#4a2210"/>
+  <!-- Cratère -->
+  <ellipse cx="30" cy="10" rx="7" ry="4" fill="#1a0800" stroke="#E63946" stroke-width="1"/>
+  <!-- Lave dans cratère -->
+  <ellipse cx="30" cy="10" rx="5" ry="2.5" fill="#E63946" opacity="0.9"/>
+  <ellipse cx="30" cy="10" rx="3" ry="1.5" fill="#F4A261" opacity="0.95"/>
+  <!-- Coulées de lave -->
+  <path d="M25,14 Q22,22 20,28 Q19,32 21,34" stroke="#E63946" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M35,13 Q37,20 38,26 Q39,31 37,34" stroke="#F4A261" stroke-width="1.8" fill="none" stroke-linecap="round" opacity="0.8"/>
+  <path d="M30,15 Q30,24 29,32 Q28,38 30,42" stroke="#E63946" stroke-width="1.5" fill="none" stroke-linecap="round" opacity="0.75"/>
+  <!-- Rochers base -->
+  <ellipse cx="30" cy="50" rx="18" ry="4" fill="#2a1005"/>
+  <polygon points="14,50 18,42 22,50" fill="#3a1a08"/>
+  <polygon points="38,50 42,44 46,50" fill="#3a1a08"/>
+  <!-- Fumée / particules -->
+  <circle cx="26" cy="5" r="2" fill="#888" opacity="0.5"/>
+  <circle cx="33" cy="3" r="1.5" fill="#888" opacity="0.4"/>
+  <circle cx="30" cy="2" r="1" fill="#aaa" opacity="0.35"/>
+  <!-- Croix interdite -->
+  <line x1="6" y1="54" x2="14" y2="54" stroke="#E63946" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="10" cy="54" r="4" fill="none" stroke="#E63946" stroke-width="1.5"/>
+  <line x1="8" y1="52" x2="12" y2="56" stroke="#E63946" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Label -->
+  <text x="30" y="58" font-family="sans-serif" font-size="5" font-weight="bold" fill="#E63946" text-anchor="middle">VOLCAN</text>
+</svg>
