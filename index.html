@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Board Game Generator — Portfolio</title>
+  <style>
+    body { font-family: sans-serif; max-width: 700px; 
+           margin: 60px auto; padding: 0 20px; }
+    h1 { font-size: 2rem; }
+    .game-card { border: 1px solid #ddd; border-radius: 8px;
+                 padding: 20px; margin: 20px 0; }
+    a.play-btn { display: inline-block; background: #1D3557;
+                 color: white; padding: 10px 20px; border-radius: 6px;
+                 text-decoration: none; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🎲 Board Game Generator</h1>
+  <p>Pipeline multi-agent LangGraph + Claude Sonnet — 
+     chaque jeu généré automatiquement à partir d'un prompt.</p>
+
+  <div class="game-card">
+    <h2>Dés du Destin</h2>
+    <p>Jeu coopératif de dés — 2 à 4 joueurs</p>
+    <p><em>v1.0 — pipeline initial</em></p>
+    <a class="play-btn" href="output/des-du-destin/index.html">▶ Jouer</a>
+  </div>
+
+  <div class="game-card">
+    <h2>Duel Tactique</h2>
+    <p>Jeu de stratégie sur plateau — 2 joueurs</p>
+    <p><em>v2.0 — pipeline renforcé, 0 correction manuelle</em></p>
+    <a class="play-btn" href="output/duel-tactique/index.html">▶ Jouer</a>
+  </div>
+
+  <hr>
+  <p><a href="https://github.com/MalekSnous/boardgame-generator">
+    Voir le code source sur GitHub →</a></p>
+</body>
+</html>
