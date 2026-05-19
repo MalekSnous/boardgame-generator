@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Dé Rouge - Face 4</title>
+  <rect x="2" y="2" width="56" height="56" rx="10" ry="10" fill="#E63946" stroke="#1D3557" stroke-width="2.5"/>
+  <rect x="6" y="6" width="48" height="48" rx="7" ry="7" fill="none" stroke="#F1FAEE" stroke-width="0.8" opacity="0.4"/>
+  <circle cx="19" cy="19" r="5.5" fill="#F1FAEE"/>
+  <circle cx="41" cy="19" r="5.5" fill="#F1FAEE"/>
+  <circle cx="19" cy="41" r="5.5" fill="#F1FAEE"/>
+  <circle cx="41" cy="41" r="5.5" fill="#F1FAEE"/>
+</svg>

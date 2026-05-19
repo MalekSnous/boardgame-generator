@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <title>Plateau Joueur Bleu - Dés du Destin</title>
+  <!-- Fond principal -->
+  <rect width="400" height="400" rx="12" ry="12" fill="#F1FAEE" stroke="#1D3557" stroke-width="3"/>
+  <!-- Bandeau titre joueur -->
+  <rect x="0" y="0" width="400" height="52" rx="12" ry="12" fill="#457B9D"/>
+  <rect x="0" y="30" width="400" height="22" fill="#457B9D"/>
+  <text x="200" y="33" font-family="sans-serif" font-size="18" font-weight="bold" fill="#F1FAEE" text-anchor="middle" dominant-baseline="middle">JOUEUR 2 — BLEU</text>
+  <!-- Sous-titre -->
+  <text x="200" y="48" font-family="sans-serif" font-size="10" fill="#A8DADC" text-anchor="middle">Dés du Destin</text>
+
+  <!-- SECTION RÉSERVE DÉS -->
+  <rect x="12" y="62" width="376" height="130" rx="8" ry="8" fill="#E8F4F8" stroke="#1D3557" stroke-width="1.5"/>
+  <text x="200" y="78" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1D3557" text-anchor="middle">RÉSERVE DES DÉS</text>
+
+  <!-- Dé 1 -->
+  <rect x="40" y="88" width="70" height="70" rx="10" ry="10" fill="#457B9D" stroke="#1D3557" stroke-width="2"/>
+  <text x="75" y="115" font-family="sans-serif" font-size="10" fill="#F1FAEE" text-anchor="middle">DÉ 1</text>
+  <!-- Points dé face 1 -->
+  <circle cx="75" cy="133" r="5" fill="#F1FAEE"/>
+  <text x="75" y="152" font-family="sans-serif" font-size="9" fill="#A8DADC" text-anchor="middle">En réserve</text>
+
+  <!-- Dé 2 -->
+  <rect x="165" y="88" width="70" height="70" rx="10" ry="10" fill="#457B9D" stroke="#1D3557" stroke-width="2"/>
+  <text x="200" y="115" font-family="sans-serif" font-size="10" fill="#F1FAEE" text-anchor="middle">DÉ 2</text>
+  <!-- Points dé face 3 -->
+  <circle cx="186" cy="126" r="4" fill="#F1FAEE"/>
+  <circle cx="200" cy="133" r="4" fill="#F1FAEE"/>
+  <circle cx="214" cy="140" r="4" fill="#F1FAEE"/>
+  <text x="200" y="152" font-family="sans-serif" font-size="9" fill="#A8DADC" text-anchor="middle">En réserve</text>
+
+  <!-- Dé 3 -->
+  <rect x="290" y="88" width="70" height="70" rx="10" ry="10" fill="#457B9D" stroke="#1D3557" stroke-width="2"/>
+  <text x="325" y="115" font-family="sans-serif" font-size="10" fill="#F1FAEE" text-anchor="middle">DÉ 3</text>
+  <!-- Points dé face 6 -->
+  <circle cx="315" cy="124" r="3.5" fill="#F1FAEE"/>
+  <circle cx="335" cy="124" r="3.5" fill="#F1FAEE"/>
+  <circle cx="315" cy="133" r="3.5" fill="#F1FAEE"/>
+  <circle cx="335" cy="133" r="3.5" fill="#F1FAEE"/>
+  <circle cx="315" cy="142" r="3.5" fill="#F1FAEE"/>
+  <circle cx="335" cy="142" r="3.5" fill="#F1FAEE"/>
+  <text x="325" y="152" font-family="sans-serif" font-size="9" fill="#A8DADC" text-anchor="middle">En réserve</text>
+
+  <!-- SECTION COMBINAISONS -->
+  <rect x="12" y="202" width="376" height="180" rx="8" ry="8" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+  <text x="200" y="218" font-family="sans-serif" font-size="12" font-weight="bold" fill="#1D3557" text-anchor="middle">COMBINAISONS</text>
+  <!-- Ligne séparatrice -->
+  <line x1="20" y1="224" x2="380" y2="224" stroke="#A8DADC" stroke-width="1"/>
+
+  <!-- En-têtes tableau -->
+  <rect x="16" y="226" width="175" height="18" fill="#457B9D" rx="3"/>
+  <rect x="196" y="226" width="192" height="18" fill="#457B9D" rx="3"/>
+  <text x="103" y="238" font-family="sans-serif" font-size="10" font-weight="bold" fill="#F1FAEE" text-anchor="middle">COMBINAISON</text>
+  <text x="292" y="238" font-family="sans-serif" font-size="10" font-weight="bold" fill="#F1FAEE" text-anchor="middle">EFFET</text>
+
+  <!-- Ligne 1 -->
+  <rect x="16" y="245" width="375" height="20" fill="#E8F4F8" rx="2"/>
+  <text x="24" y="258" font-family="sans-serif" font-size="9" fill="#1D3557">Brelan (3 identiques)</text>
+  <text x="210" y="258" font-family="sans-serif" font-size="9" fill="#1D3557">Annuler 2 crises</text>
+  <!-- Icône accent -->
+  <circle cx="200" cy="255" r="4" fill="#F4A261"/>
+
+  <!-- Ligne 2 -->
+  <rect x="16" y="266" width="375" height="20" fill="#F1FAEE" rx="2"/>
+  <text x="24" y="279" font-family="sans-serif" font-size="9" fill="#1D3557">Suite (3 consécutifs)</text>
+  <text x="210" y="279" font-family="sans-serif" font-size="9" fill="#1D3557">Annuler 1 crise</text>
+  <circle cx="200" cy="276" r="4" fill="#A8DADC"/>
+
+  <!-- Ligne 3 -->
+  <rect x="16" y="287" width="375" height="20" fill="#E8F4F8" rx="2"/>
+  <text x="24" y="300" font-family="sans-serif" font-size="9" fill="#1D3557">Paire (2 identiques)</text>
+  <text x="210" y="300" font-family="sans-serif" font-size="9" fill="#1D3557">Rejouer 1 dé</text>
+  <circle cx="200" cy="297" r="4" fill="#A8DADC"/>
+
+  <!-- Ligne 4 -->
+  <rect x="16" y="308" width="375" height="20" fill="#F1FAEE" rx="2"/>
+  <text x="24" y="321" font-family="sans-serif" font-size="9" fill="#1D3557">Tout différent</text>
+  <text x="210" y="321" font-family="sans-serif" font-size="9" fill="#1D3557">Piocher carte Bouclier</text>
+  <circle cx="200" cy="318" r="4" fill="#2A9D8F"/>
+
+  <!-- Ligne 5 -->
+  <rect x="16" y="329" width="375" height="20" fill="#E8F4F8" rx="2"/>
+  <text x="24" y="342" font-family="sans-serif" font-size="9" fill="#1D3557">Maximum (6-6-6)</text>
+  <text x="210" y="342" font-family="sans-serif" font-size="9" fill="#1D3557">Bloquer Catastrophe</text>
+  <circle cx="200" cy="339" r="4" fill="#F4A261"/>
+
+  <!-- Ligne 6 -->
+  <rect x="16" y="350" width="375" height="18" fill="#F1FAEE" rx="2"/>
+  <text x="24" y="362" font-family="sans-serif" font-size="9" fill="#1D3557">Minimum (1-1-1)</text>
+  <text x="210" y="362" font-family="sans-serif" font-size="9" fill="#E63946">+2 crises immédiates</text>
+  <circle cx="200" cy="359" r="4" fill="#E63946"/>
+
+  <!-- SECTION STATUT -->
+  <rect x="12" y="388" width="376" height="8" rx="4" ry="4" fill="#A8DADC" stroke="#1D3557" stroke-width="1"/>
+  <!-- Curseur statut -->
+  <rect x="12" y="388" width="130" height="8" rx="4" ry="4" fill="#457B9D"/>
+  <text x="200" y="397" font-family="sans-serif" font-size="8" fill="#1D3557" text-anchor="middle">CRISES ABSORBÉES : 0</text>
+</svg>

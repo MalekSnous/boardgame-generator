@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dés du Destin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ======================================================
+       ÉCRAN DE CONFIGURATION
+  ====================================================== -->
+  <div id="setup-screen">
+    <div id="setup-box">
+      <h1 id="setup-title">🎲 Dés du Destin</h1>
+      <p id="setup-subtitle">Jeu coopératif de dés contre les catastrophes</p>
+      <div id="player-select">
+        <label for="num-players-input">Nombre de joueurs :</label>
+        <div id="player-buttons">
+          <button class="player-count-btn" data-count="2">2</button>
+          <button class="player-count-btn" data-count="3">3</button>
+          <button class="player-count-btn" data-count="4">4</button>
+        </div>
+      </div>
+      <button id="start-game-btn">Commencer la partie</button>
+    </div>
+  </div>
+
+  <!-- ======================================================
+       ÉCRAN DE JEU PRINCIPAL
+  ====================================================== -->
+  <div id="game-screen" class="hidden">
+
+    <!-- HEADER -->
+    <header id="game-header">
+      <h1 id="game-title">🎲 Dés du Destin</h1>
+      <div id="header-controls">
+        <button id="new-game-btn">Nouvelle partie</button>
+      </div>
+    </header>
+
+    <!-- MAIN LAYOUT -->
+    <div id="main-layout">
+
+      <!-- LEFT PANEL : info-panel -->
+      <aside id="info-panel">
+
+        <!-- Joueur actif -->
+        <section id="active-player-section">
+          <h2>Joueur actif</h2>
+          <div id="active-player-indicator">
+            <span id="active-player-emoji"></span>
+            <span id="active-player-name"></span>
+          </div>
+          <div id="phase-indicator">
+            <span id="phase-label"></span>
+          </div>
+        </section>
+
+        <!-- Jauge de crise -->
+        <section id="crisis-section">
+          <h2>Jauge de Crise</h2>
+          <div id="crisis-gauge-container">
+            <div id="crisis-gauge-bar">
+              <div id="crisis-gauge-fill"></div>
+            </div>
+            <div id="crisis-gauge-labels">
+              <span id="crisis-value">0</span>
+              <span id="crisis-max">/ 10</span>
+            </div>
+          </div>
+          <div id="crisis-pips">
+            <span class="crisis-pip" data-pip="0"></span>
+            <span class="crisis-pip" data-pip="1"></span>
+            <span class="crisis-pip" data-pip="2"></span>
+            <span class="crisis-pip" data-pip="3"></span>
+            <span class="crisis-pip" data-pip="4"></span>
+            <span class="crisis-pip" data-pip="5"></span>
+            <span class="crisis-pip" data-pip="6"></span>
+            <span class="crisis-pip" data-pip="7"></span>
+            <span class="crisis-pip" data-pip="8"></span>
+            <span class="crisis-pip" data-pip="9"></span>
+          </div>
+        </section>
+
+        <!-- Progression Menaces -->
+        <section id="threats-section">
+          <h2>Menaces</h2>
+          <div id="threats-progress">
+            <span id="threats-neutralized">0</span>
+            <span> / </span>
+            <span id="threats-target">15</span>
+            <span> neutralisées</span>
+          </div>
+          <div id="threats-deck-count">
+            Pioche : <span id="deck-remaining">15</span>
+          </div>
+        </section>
+
+        <!-- Cartes Bouclier -->
+        <section id="shields-section">
+          <h2>Boucliers disponibles (<span id="shield-count">0</span>)</h2>
+          <div id="shield-cards-list"></div>
+        </section>
+
+        <!-- Rappel combinaisons -->
+        <section id="combo-reference">
+          <h2>Combinaisons</h2>
+          <ul id="combo-list">
+            <li><strong>PAIRE</strong> → Crise −1</li>
+            <li><strong>SUITE</strong> → Neutralise Menace</li>
+            <li><strong>FULL</strong> → Crise −3 + Bouclier</li>
+            <li><strong>BRELAN</strong> → Neutralise + Crise −2</li>
+          </ul>
+        </section>
+
+      </aside>
+
+      <!-- CENTER : game-board -->
+      <main id="game-board">
+
+        <!-- Tuile Menace active -->
+        <section id="threat-board">
+          <h2>Menace Active</h2>
+          <div id="active-threat-card">
+            <div id="threat-icon"></div>
+            <div id="threat-name"></div>
+            <div id="threat-desc"></div>
+            <div id="threat-crisis-badge"></div>
+          </div>
+        </section>
+
+        <!-- Zone de jeu du joueur actif -->
+        <section id="player-turn-zone">
+
+          <!-- Dés du joueur actif -->
+          <div id="player-dice-section">
+            <h3 id="player-dice-title">Vos dés</h3>
+            <div id="player-dice-row">
+              <div class="die-slot" id="die-slot-0">
+                <div class="die" id="die-0" data-index="0">
+                  <span class="die-value"></span>
+                </div>
+                <div class="die-label">Dé 1</div>
+              </div>
+              <div class="die-slot" id="die-slot-1">
+                <div class="die" id="die-1" data-index="1">
+                  <span class="die-value"></span>
+                </div>
+                <div class="die-label">Dé 2</div>
+              </div>
+              <div class="die-slot" id="die-slot-2">
+                <div class="die" id="die-2" data-index="2">
+                  <span class="die-value"></span>
+                </div>
+                <div class="die-label">Dé 3</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dés offerts par les autres joueurs -->
+          <div id="offered-dice-section">
+            <h3>Dés offerts par les alliés</h3>
+            <div id="offered-dice-row"></div>
+            <p id="no-offers-msg" class="hidden">Aucun dé disponible.</p>
+          </div>
+
+          <!-- Aperçu combinaison -->
+          <div id="combo-preview-section">
+            <h3>Combinaison détectée</h3>
+            <div id="combo-preview-label">—</div>
+            <div id="combo-values-preview"></div>
+          </div>
+
+          <!-- Actions -->
+          <div id="action-buttons">
+            <button id="roll-btn" class="action-btn primary hidden">🎲 Lancer les dés</button>
+            <button id="reroll-btn" class="action-btn secondary hidden">🔁 Confirmer la relance</button>
+            <button id="skip-reroll-btn" class="action-btn neutral hidden">✋ Garder les dés</button>
+            <button id="resolve-btn" class="action-btn success hidden">✅ Résoudre la combinaison</button>
+            <button id="no-combo-btn" class="action-btn danger hidden">❌ Passer (pas de combo)</button>
+          </div>
+
+        </section>
+
+      </main>
+
+      <!-- RIGHT PANEL : joueurs + log -->
+      <aside id="right-panel">
+
+        <!-- Plateaux joueurs -->
+        <section id="players-section">
+          <h2>Joueurs</h2>
+          <div id="players-list"></div>
+        </section>
+
+        <!-- Journal -->
+        <section id="log-section">
+          <h2>Journal</h2>
+          <div id="log-container">
+            <ul id="log-list"></ul>
+          </div>
+        </section>
+
+      </aside>
+
+    </div><!-- end #main-layout -->
+
+  </div><!-- end #game-screen -->
+
+  <!-- ======================================================
+       ÉCRAN DE FIN DE PARTIE (gameover overlay)
+  ====================================================== -->
+  <div id="gameover-screen" class="hidden">
+    <div id="gameover-box">
+      <div id="gameover-icon"></div>
+      <h1 id="gameover-title"></h1>
+      <p id="gameover-message"></p>
+      <div id="gameover-stats">
+        <div class="stat-row">
+          <span class="stat-label">Menaces neutralisées :</span>
+          <span id="stat-neutralized" class="stat-value"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Jauge de crise finale :</span>
+          <span id="stat-crisis" class="stat-value"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Boucliers restants :</span>
+          <span id="stat-shields" class="stat-value"></span>
+        </div>
+      </div>
+      <button id="gameover-new-game-btn">🎮 Nouvelle partie</button>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+  <script>
+    // ============================================================
+    // BOOTSTRAP — wiring setup screen & rendering
+    // ============================================================
+
+    let selectedNumPlayers = 2;
+
+    document.querySelectorAll('.player-count-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.player-count-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedNumPlayers = parseInt(btn.dataset.count, 10);
+      });
+    });
+    // Default selection
+    document.querySelector('.player-count-btn[data-count="2"]').classList.add('selected');
+
+    document.getElementById('start-game-btn').addEventListener('click', () => {
+      document.getElementById('setup-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      initGame(selectedNumPlayers);
+    });
+
+    document.getElementById('new-game-btn').addEventListener('click', () => {
+      document.getElementById('game-screen').classList.add('hidden');
+      document.getElementById('gameover-screen').classList.add('hidden');
+      document.getElementById('setup-screen').classList.remove('hidden');
+    });
+
+    document.getElementById('gameover-new-game-btn').addEventListener('click', () => {
+      document.getElementById('gameover-screen').classList.add('hidden');
+      document.getElementById('setup-screen').classList.remove('hidden');
+    });
+
+    // ============================================================
+    // RENDER FUNCTIONS (called by game.js via renderAll)
+    // ============================================================
+
+    function renderAll() {
+      renderHeader();
+      renderCrisisGauge();
+      renderThreatsProgress();
+      renderActiveThreat();
+      renderPlayerDice();
+      renderOfferedDice();
+      renderComboPreview();
+      renderActionButtons();
+      renderPlayers();
+      renderShields();
+      renderLog();
+      if (gameState.gameOver) renderGameOver();
+    }
+
+    function renderHeader() {
+      const cp = currentPlayer();
+      document.getElementById('active-player-emoji').textContent = cp.emoji;
+      document.getElementById('active-player-name').textContent = cp.name;
+      document.getElementById('active-player-indicator').className = 'player-color-' + cp.color;
+
+      const phaseLabels = {
+        setup:    '⚙️ Configuration',
+        threat:   '⚠️ Révélation Menace',
+        roll:     '🎲 Lancer les dés',
+        reroll:   '🔁 Choisir la relance',
+        combine:  '🤝 Combinaison',
+        resolve:  '✅ Résolution',
+        gameover: '🏁 Fin de partie',
+      };
+      document.getElementById('phase-label').textContent = phaseLabels[gameState.phase] || gameState.phase;
+    }
+
+    function renderCrisisGauge() {
+      const val = gameState.crisisGauge;
+      const max = gameState.maxCrisis;
+      const pct = (val / max) * 100;
+      document.getElementById('crisis-gauge-fill').style.width = pct + '%';
+      document.getElementById('crisis-value').textContent = val;
+
+      // Color by severity
+      const fill = document.getElementById('crisis-gauge-fill');
+      fill.className = '';
+      if (val <= 3) fill.classList.add('gauge-safe');
+      else if (val <= 6) fill.classList.add('gauge-warn');
+      else fill.classList.add('gauge-danger');
+
+      // Pips
+      document.querySelectorAll('.crisis-pip').forEach(pip => {
+        const n = parseInt(pip.dataset.pip, 10);
+        pip.classList.toggle('active', n < val);
+        pip.classList.toggle('danger', n >= 7 && n < val);
+      });
+    }
+
+    function renderThreatsProgress() {
+      document.getElementById('threats-neutralized').textContent = gameState.neutralizedThreats;
+      document.getElementById('threats-target').textContent = gameState.targetNeutralized;
+      document.getElementById('deck-remaining').textContent = gameState.threatDeck.length;
+    }
+
+    function renderActiveThreat() {
+      const threat = gameState.activeThreat;
+      const card = document.getElementById('active-threat-card');
+      if (!threat) {
+        card.classList.add('empty');
+        document.getElementById('threat-icon').textContent = '—';
+        document.getElementById('threat-name').textContent = 'Aucune menace active';
+        document.getElementById('threat-desc').textContent = '';
+        document.getElementById('threat-crisis-badge').textContent = '';
+        return;
+      }
+      card.classList.remove('empty');
+      card.classList.toggle('catastrophe', !!threat.catastrophe);
+      document.getElementById('threat-icon').textContent = threat.icon;
+      document.getElementById('threat-name').textContent = threat.name;
+      document.getElementById('threat-desc').textContent = threat.desc;
+      document.getElementById('threat-crisis-badge').textContent =
+        threat.catastrophe ? '☠ CATASTROPHE' : (threat.crisis > 0 ? `Crise +${threat.crisis}` : '');
+    }
+
+    function renderPlayerDice() {
+      const cp = currentPlayer();
+      const phase = gameState.phase;
+
+      for (let i = 0; i < 3; i++) {
+        const die = document.getElementById('die-' + i);
+        const slot = document.getElementById('die-slot-' + i);
+        const val = cp.dice[i];
+
+        die.className = 'die';
+        die.setAttribute('data-index', i);
+
+        if (val === 0) {
+          die.classList.add('blocked');
+          die.querySelector('.die-value').textContent = '🔒';
+          slot.classList.add('blocked-slot');
+        } else {
+          slot.classList.remove('blocked-slot');
+          die.querySelector('.die-value').textContent = val > 0 ? val : '?';
+
+          if (phase === 'reroll') {
+            die.classList.add('selectable');
+            if (gameState.selectedDiceForReroll.includes(i)) {
+              die.classList.add('selected-reroll');
+            }
+            die.onclick = () => { toggleDieForReroll(i); renderAll(); };
+          } else {
+            die.classList.remove('selectable');
+            die.onclick = null;
+          }
+        }
+
+        // Color by player
+        die.classList.add('die-color-' + cp.color);
+
+        // Show die faces dots
+        renderDieFace(die, val > 0 ? val : 0);
+      }
+
+      document.getElementById('player-dice-title').textContent =
+        `Dés de ${cp.emoji} ${cp.name}`;
+    }
+
+    function renderDieFace(dieEl, value) {
+      const valEl = dieEl.querySelector('.die-value');
+      valEl.textContent = value > 0 ? value : (dieEl.classList.contains('blocked') ? '🔒' : '?');
+    }
+
+    function renderOfferedDice() {
+      const row = document.getElementById('offered-dice-row');
+      const noMsg = document.getElementById('no-offers-msg');
+      row.innerHTML = '';
+
+      if (gameState.phase !== 'combine' && gameState.phase !== 'reroll') {
+        noMsg.classList.add('hidden');
+        return;
+      }
+
+      const offers = gameState.offeredDice;
+      if (!offers || offers.length === 0) {
+        noMsg.classList.remove('hidden');
+        return;
+      }
+      noMsg.classList.add('hidden');
+
+      offers.forEach((offer, i) => {
+        const p = gameState.players[offer.playerIndex];
+        const div = document.createElement('div');
+        div.className = 'offered-die-slot';
+
+        const die = document.createElement('div');
+        die.className = `die die-color-${p.color} offered-die`;
+        if (gameState.selectedOfferedDice.includes(i)) {
+          die.classList.add('selected-offered');
+        }
+        die.innerHTML = `<span class="die-value">${offer.value}</span>`;
+        die.title = `Dé de ${p.name}`;
+        die.onclick = () => { toggleOfferedDie(i); renderAll(); };
+
+        const label = document.createElement('div');
+        label.className = 'offered-die-label';
+        label.textContent = `${p.emoji} ${p.name}`;
+
+        div.appendChild(die);
+        div.appendChild(label);
+        row.appendChild(div);
+      });
+    }
+
+    function renderComboPreview() {
+      const label = document.getElementById('combo-preview-label');
+      const valPrev = document.getElementById('combo-values-preview');
+
+      if (gameState.phase !== 'combine' && gameState.phase !== 'reroll') {
+        label.textContent = '—';
+        valPrev.textContent = '';
+        return;
+      }
+
+      const cp = currentPlayer();
+      const myDice = cp.dice.filter(d => d > 0);
+      const offeredValues = gameState.selectedOfferedDice.map(i => gameState.offeredDice[i]?.value).filter(v => v !== undefined);
+      const all = [...myDice, ...offeredValues];
+
+      if (all.length === 0) {
+        label.textContent = '—';
+        valPrev.textContent = '';
+        return;
+      }
+
+      const combo = detectCombination(all);
+      label.textContent = combinationLabel(combo);
+      label.className = combo ? 'combo-detected combo-' + combo : 'combo-none';
+      valPrev.textContent = all.length > 0 ? `[${all.join(', ')}]` : '';
+    }
+
+    function renderActionButtons() {
+      const phase = gameState.phase;
+      const hide = id => document.getElementById(id).classList.add('hidden');
+      const show = id => document.getElementById(id).classList.remove('hidden');
+
+      // Hide all first
+      ['roll-btn','reroll-btn','skip-reroll-btn','resolve-btn','no-combo-btn'].forEach(hide);
+
+      if (gameState.gameOver) return;
+
+      if (phase === 'roll') {
+        show('roll-btn');
+      } else if (phase === 'reroll') {
+        show('reroll-btn');
+        show('skip-reroll-btn');
+      } else if (phase === 'combine') {
+        show('resolve-btn');
+        show('no-combo-btn');
+      }
+    }
+
+    function renderPlayers() {
+      const list = document.getElementById('players-list');
+      list.innerHTML = '';
+      gameState.players.forEach((p, i) => {
+        const div = document.createElement('div');
+        div.className = `player-card player-color-${p.color}`;
+        if (i === gameState.currentPlayerIndex) div.classList.add('active-player-card');
+
+        const header = document.createElement('div');
+        header.className = 'player-card-header';
+        header.innerHTML = `<span class="player-card-emoji">${p.emoji}</span>
+                            <span class="player-card-name">${p.name}</span>
+                            ${i === gameState.currentPlayerIndex ? '<span class="player-turn-badge">Tour</span>' : ''}`;
+
+        const diceRow = document.createElement('div');
+        diceRow.className = 'player-card-dice';
+
+        p.dice.forEach((val, di) => {
+          const d = document.createElement('span');
+          d.className = `mini-die die-color-${p.color}`;
+          if (val === 0) {
+            d.textContent = '🔒';
+            d.classList.add('mini-die-blocked');
+          } else {
+            d.textContent = val || '?';
+          }
+          diceRow.appendChild(d);
+        });
+
+        const reserve = document.createElement('div');
+        reserve.className = 'player-card-reserve';
+        if (p.reserveDie !== null && !p.reserveDieUsed) {
+          reserve.innerHTML = `<span class="reserve-label">Réserve:</span>
+                               <span class="mini-die die-color-${p.color}">${p.reserveDie}</span>`;
+        } else {
+          reserve.innerHTML = `<span class="reserve-label reserve-empty">Pas de réserve</span>`;
+        }
+
+        div.appendChild(header);
+        div.appendChild(diceRow);
+        div.appendChild(reserve);
+        list.appendChild(div);
+      });
+    }
+
+    function renderShields() {
+      const list = document.getElementById('shield-cards-list');
+      const count = document.getElementById('shield-count');
+      const cards = gameState.shieldCards;
+      count.textContent = cards.length;
+      list.innerHTML = '';
+
+      if (cards.length === 0) {
+        list.innerHTML = '<p class="no-shields">Aucun bouclier disponible.</p>';
+        return;
+      }
+
+      cards.forEach((card, i) => {
+        const div = document.createElement('div');
+        div.className = 'shield-card';
+
+        const canUse = (gameState.phase === 'combine' || gameState.phase === 'reroll') && !gameState.usedShieldThisTurn;
+        const isPassive = card.effect === 'block_cata';
+
+        div.innerHTML = `<span class="shield-icon">${card.icon}</span>
+                         <span class="shield-name">${card.name}</span>
+                         <span class="shield-desc">${card.desc}</span>`;
+
+        if (!isPassive && canUse) {
+          const btn = document.createElement('button');
+          btn.className = 'shield-use-btn';
+          btn.textContent = 'Utiliser';
+          btn.onclick = () => { useShield(i); };
+          div.appendChild(btn);
+        } else if (isPassive) {
+          const tag = document.createElement('span');
+          tag.className = 'shield-passive-tag';
+          tag.textContent = 'Auto';
+          div.appendChild(tag);
+        }
+
+        list.appendChild(div);
+      });
+    }
+
+    function renderLog() {
+      const ul = document.getElementById('log-list');
+      ul.innerHTML = '';
+      gameState.log.forEach(msg => {
+        const li = document.createElement('li');
+        li.textContent = msg;
+        ul.appendChild(li);
+      });
+    }
+
+    function renderGameOver() {
+      const screen = document.getElementById('gameover-screen');
+      screen.classList.remove('hidden');
+
+      const isWin = gameState.winner === 'players';
+      document.getElementById('gameover-icon').textContent = isWin ? '🏆' : '💀';
+      document.getElementById('gameover-title').textContent = isWin ? 'VICTOIRE !' : 'DÉFAITE !';
+      document.getElementById('gameover-message').textContent = isWin
+        ? 'L\'équipe a repoussé toutes les catastrophes !'
+        : 'La crise a submergé les défenses…';
+
+      document.getElementById('stat-neutralized').textContent =
+        `${gameState.neutralizedThreats} / ${gameState.targetNeutralized}`;
+      document.getElementById('stat-crisis').textContent =
+        `${gameState.crisisGauge} / ${gameState.maxCrisis}`;
+      document.getElementById('stat-shields').textContent =
+        gameState.shieldCards.length;
+
+      screen.classList.toggle('win', isWin);
+      screen.classList.toggle('lose', !isWin);
+    }
+
+    // ============================================================
+    // BUTTON WIRING
+    // ============================================================
+
+    document.getElementById('roll-btn').addEventListener('click', () => {
+      rollDice();
+    });
+
+    document.getElementById('reroll-btn').addEventListener('click', () => {
+      confirmReroll();
+    });
+
+    document.getElementById('skip-reroll-btn').addEventListener('click', () => {
+      skipReroll();
+    });
+
+    document.getElementById('resolve-btn').addEventListener('click', () => {
+      resolveCombination();
+    });
+
+    document.getElementById('no-combo-btn').addEventListener('click', () => {
+      applyNoCombo();
+    });
+
+  </script>
+</body>
+</html>

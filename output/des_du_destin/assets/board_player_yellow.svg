@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <title>Plateau Joueur Jaune - Dés du Destin</title>
+  <!-- Fond principal -->
+  <rect width="400" height="400" rx="16" ry="16" fill="#F1FAEE" stroke="#1D3557" stroke-width="3"/>
+  <!-- Bandeau joueur -->
+  <rect x="0" y="0" width="400" height="56" rx="16" ry="16" fill="#E9C46A"/>
+  <rect x="0" y="36" width="400" height="20" fill="#E9C46A"/>
+  <text x="200" y="36" font-family="serif" font-size="22" font-weight="bold" fill="#1D3557" text-anchor="middle">JOUEUR 4 — JAUNE</text>
+  <!-- Sous-titre -->
+  <text x="200" y="72" font-family="serif" font-size="12" fill="#1D3557" text-anchor="middle">Dés du Destin</text>
+
+  <!-- Section réserve de dés -->
+  <rect x="16" y="88" width="368" height="130" rx="10" ry="10" fill="#E9C46A" fill-opacity="0.18" stroke="#1D3557" stroke-width="2"/>
+  <text x="200" y="108" font-family="serif" font-size="13" font-weight="bold" fill="#1D3557" text-anchor="middle">RÉSERVE DE DÉS</text>
+
+  <!-- Dé 1 -->
+  <rect x="48" y="118" width="64" height="64" rx="10" ry="10" fill="#F1FAEE" stroke="#E9C46A" stroke-width="3"/>
+  <!-- Face dé 1 (valeur 1) -->
+  <circle cx="80" cy="150" r="7" fill="#E9C46A"/>
+  <text x="80" y="194" font-family="serif" font-size="11" fill="#1D3557" text-anchor="middle">Dé 1</text>
+
+  <!-- Dé 2 -->
+  <rect x="168" y="118" width="64" height="64" rx="10" ry="10" fill="#F1FAEE" stroke="#E9C46A" stroke-width="3"/>
+  <!-- Face dé 2 (valeur 2) -->
+  <circle cx="190" cy="134" r="6" fill="#E9C46A"/>
+  <circle cx="210" cy="166" r="6" fill="#E9C46A"/>
+  <text x="200" y="194" font-family="serif" font-size="11" fill="#1D3557" text-anchor="middle">Dé 2</text>
+
+  <!-- Dé 3 -->
+  <rect x="288" y="118" width="64" height="64" rx="10" ry="10" fill="#F1FAEE" stroke="#E9C46A" stroke-width="3"/>
+  <!-- Face dé 3 (valeur 3) -->
+  <circle cx="306" cy="132" r="5.5" fill="#E9C46A"/>
+  <circle cx="320" cy="150" r="5.5" fill="#E9C46A"/>
+  <circle cx="334" cy="168" r="5.5" fill="#E9C46A"/>
+  <text x="320" y="194" font-family="serif" font-size="11" fill="#1D3557" text-anchor="middle">Dé 3</text>
+
+  <!-- Section combinaisons -->
+  <rect x="16" y="232" width="368" height="148" rx="10" ry="10" fill="#A8DADC" fill-opacity="0.25" stroke="#1D3557" stroke-width="2"/>
+  <text x="200" y="252" font-family="serif" font-size="13" font-weight="bold" fill="#1D3557" text-anchor="middle">COMBINAISONS</text>
+
+  <!-- Ligne séparatrice -->
+  <line x1="30" y1="258" x2="370" y2="258" stroke="#1D3557" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- En-têtes colonnes -->
+  <text x="100" y="274" font-family="serif" font-size="10" font-weight="bold" fill="#1D3557" text-anchor="middle">COMBINAISON</text>
+  <text x="260" y="274" font-family="serif" font-size="10" font-weight="bold" fill="#1D3557" text-anchor="middle">EFFET</text>
+  <line x1="30" y1="278" x2="370" y2="278" stroke="#1D3557" stroke-width="1"/>
+  <line x1="190" y1="258" x2="190" y2="374" stroke="#1D3557" stroke-width="1" stroke-dasharray="3,2"/>
+
+  <!-- Ligne 1 -->
+  <text x="100" y="293" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Brelan (3 identiques)</text>
+  <text x="260" y="293" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">-2 crise</text>
+  <line x1="30" y1="298" x2="370" y2="298" stroke="#1D3557" stroke-width="0.7" stroke-dasharray="3,3"/>
+
+  <!-- Ligne 2 -->
+  <text x="100" y="313" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Paire (2 identiques)</text>
+  <text x="260" y="313" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">-1 crise</text>
+  <line x1="30" y1="318" x2="370" y2="318" stroke="#1D3557" stroke-width="0.7" stroke-dasharray="3,3"/>
+
+  <!-- Ligne 3 -->
+  <text x="100" y="333" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Suite (3 consécutifs)</text>
+  <text x="260" y="333" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Rejouer 1 dé</text>
+  <line x1="30" y1="338" x2="370" y2="338" stroke="#1D3557" stroke-width="0.7" stroke-dasharray="3,3"/>
+
+  <!-- Ligne 4 -->
+  <text x="100" y="353" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Somme ≥ 15</text>
+  <text x="260" y="353" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Bloquer Menace</text>
+  <line x1="30" y1="358" x2="370" y2="358" stroke="#1D3557" stroke-width="0.7" stroke-dasharray="3,3"/>
+
+  <!-- Ligne 5 -->
+  <text x="100" y="373" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">Tous différents</text>
+  <text x="260" y="373" font-family="serif" font-size="10" fill="#1D3557" text-anchor="middle">+1 carte Bouclier</text>
+
+  <!-- Décoration coin jaune -->
+  <circle cx="370" cy="370" r="18" fill="#E9C46A" fill-opacity="0.5" stroke="#1D3557" stroke-width="1.5"/>
+  <text x="370" y="375" font-family="serif" font-size="14" font-weight="bold" fill="#1D3557" text-anchor="middle">J4</text>
+
+  <!-- Cadre décoratif coins -->
+  <rect x="4" y="4" width="392" height="392" rx="14" ry="14" fill="none" stroke="#E9C46A" stroke-width="1.5" stroke-dasharray="6,4"/>
+</svg>
