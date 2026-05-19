@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50">
+  <title>Indicateur de tour - Joueur Bleu</title>
+  <rect x="0" y="0" width="200" height="50" rx="8" ry="8" fill="#457B9D"/>
+  <polygon points="8,25 20,10 20,40" fill="#A8DADC"/>
+  <rect x="28" y="18" width="6" height="14" rx="2" fill="#F1FAEE"/>
+  <rect x="38" y="18" width="6" height="14" rx="2" fill="#F1FAEE"/>
+  <text x="56" y="32" font-family="sans-serif" font-size="16" font-weight="bold" fill="#F1FAEE">JOUEUR BLEU</text>
+  <circle cx="182" cy="25" r="8" fill="#F4A261"/>
+  <polygon points="178,25 182,18 186,25 182,32" fill="#1D3557"/>
+</svg>

@@ -15,6 +15,8 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from src.utils.retry import with_retry
+
 if TYPE_CHECKING:
     from src.orchestrator import GameState
 
@@ -58,6 +60,11 @@ class GameDesign(BaseModel):
     )
 
 
+@with_retry()
+def _invoke_design(structured_llm, messages) -> "GameDesign":
+    return structured_llm.invoke(messages)
+
+
 def run(state: GameState) -> dict:
     """Conçoit le jeu et retourne les champs enrichis du GameState."""
     llm = ChatAnthropic(model=MODEL)
@@ -73,7 +80,7 @@ def run(state: GameState) -> dict:
         ),
     ]
 
-    design: GameDesign = structured_llm.invoke(messages)
+    design: GameDesign = _invoke_design(structured_llm, messages)
 
     # game_mechanics : JSON compact — lu par l'agent Developer
     mechanics_payload = {

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duel Tactique</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header class="game-header">
+    <h1 class="game-title">⚔️ Duel Tactique</h1>
+    <p class="game-subtitle">Capturez le Général adverse pour remporter la victoire</p>
+  </header>
+
+  <main class="game-container">
+
+    <section class="board-section">
+      <div class="board-labels-col">
+        <span>1</span><span>2</span><span>3</span>
+        <span>4</span><span>5</span><span>6</span>
+        <span>7</span><span>8</span>
+      </div>
+
+      <div class="board-wrapper">
+        <div class="board-labels-row">
+          <span>A</span><span>B</span><span>C</span>
+          <span>D</span><span>E</span><span>F</span>
+          <span>G</span><span>H</span>
+        </div>
+
+        <div id="game-board" class="game-board" role="grid" aria-label="Plateau de jeu"></div>
+
+        <div class="board-labels-row">
+          <span>A</span><span>B</span><span>C</span>
+          <span>D</span><span>E</span><span>F</span>
+          <span>G</span><span>H</span>
+        </div>
+      </div>
+    </section>
+
+    <aside id="info-panel" class="info-panel" aria-label="Panneau d'information">
+      <!-- Rendu dynamiquement par game.js -->
+    </aside>
+
+  </main>
+
+  <footer class="game-footer">
+    <section class="log-section" aria-label="Journal de partie">
+      <h2 class="log-title">📋 Journal de partie</h2>
+      <div id="game-log" class="game-log" aria-live="polite" aria-relevant="additions"></div>
+    </section>
+  </footer>
+
+  <script src="game.js"></script>
+</body>
+</html>

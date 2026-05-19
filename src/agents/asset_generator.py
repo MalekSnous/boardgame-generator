@@ -21,6 +21,8 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from src.utils.retry import with_retry
+
 if TYPE_CHECKING:
     from src.orchestrator import GameState
 
@@ -62,6 +64,7 @@ def _extract_svg_references(html: str, js: str) -> list[str]:
     return list(dict.fromkeys(found))
 
 
+@with_retry()
 def _get_manifest_from_llm(llm: ChatAnthropic, state: GameState) -> list[str]:
     """Génère la liste des noms de fichiers SVG nécessaires (fallback)."""
     try:
@@ -85,6 +88,7 @@ def _get_manifest_from_llm(llm: ChatAnthropic, state: GameState) -> list[str]:
     return [ln for ln in lines if ln.endswith(".svg")][:12]  # cap à 12
 
 
+@with_retry()
 def _generate_one_svg(llm: ChatAnthropic, filename: str, game_name: str, components: str) -> str:
     """Génère le contenu SVG d'un fichier donné."""
     prompt = (
@@ -111,8 +115,6 @@ def _generate_one_svg(llm: ChatAnthropic, filename: str, game_name: str, compone
 
 def run(state: GameState) -> dict:
     """Génère les assets SVG un par un et retourne le GameAssets enrichi."""
-    from src.orchestrator import GameAssets
-
     llm = ChatAnthropic(model=MODEL, max_tokens=4096)
 
     # Étape 1 : déterminer les fichiers à générer
@@ -124,14 +126,35 @@ def run(state: GameState) -> dict:
     filenames: list[str] = []
     contents: dict[str, str] = {}
 
+    from src.utils.logger import get_logger
+
     for filename in asset_names:
-        svg = _generate_one_svg(
-            llm, filename, state.game_name or "", state.components_description or ""
-        )
+        try:
+            svg = _generate_one_svg(
+                llm, filename, state.game_name or "", state.components_description or ""
+            )
+        except Exception as exc:
+            logger = get_logger()
+            if logger:
+                logger.log_step(
+                    agent="asset_generator",
+                    duration_s=0.0,
+                    input_keys=[filename],
+                    output_keys=[],
+                    success=False,
+                    error=f"SVG generation failed for {filename}: {exc}",
+                )
+            svg = (
+                f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">'
+                f"<title>{filename}</title>"
+                f'<rect width="60" height="60" fill="#A8DADC" rx="4"/>'
+                f'<text x="30" y="35" text-anchor="middle" font-size="10" fill="#1D3557">{filename}</text>'
+                f"</svg>"
+            )
         filenames.append(filename)
         contents[filename] = svg
 
     return {
-        "assets": GameAssets(filenames=filenames, contents=contents),
+        "assets": {"filenames": filenames, "contents": contents},
         "current_step": "asset_generator_done",
     }

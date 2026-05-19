@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Cavalier Rouge - Duel Tactique</title>
+  <circle cx="30" cy="30" r="28" fill="#E63946" stroke="#1D3557" stroke-width="2.5"/>
+  <circle cx="30" cy="30" r="22" fill="#E63946" stroke="#1D3557" stroke-width="1.2" opacity="0.3"/>
+  <!-- Horse head silhouette -->
+  <g fill="#1D3557">
+    <!-- Neck and head body -->
+    <path d="M22 42 C20 38 19 32 21 27 C22 23 25 20 28 19 C26 21 25 24 26 26 C28 23 31 21 34 21 C36 21 38 23 38 25 C38 27 37 29 35 30 C37 30 39 31 39 33 C39 35 37 37 35 37 L35 42 Z"/>
+    <!-- Ear -->
+    <path d="M28 19 C29 16 31 15 32 16 C31 17 30 19 29 20 Z"/>
+    <!-- Eye -->
+    <circle cx="34" cy="24" r="1.5" fill="#F1FAEE"/>
+    <!-- Nostril -->
+    <ellipse cx="37" cy="28" rx="1" ry="1.2" fill="#E63946" opacity="0.7"/>
+    <!-- Mane -->
+    <path d="M26 26 C24 24 23 21 25 19 C24 22 25 25 27 27 Z" fill="#1D3557" opacity="0.7"/>
+  </g>
+  <!-- PA cost indicator: 1 -->
+  <circle cx="48" cy="12" r="8" fill="#F4A261" stroke="#1D3557" stroke-width="1.5"/>
+  <text x="48" y="16" text-anchor="middle" font-family="sans-serif" font-size="10" font-weight="bold" fill="#1D3557">1</text>
+  <!-- Movement range indicator -->
+  <text x="30" y="56" text-anchor="middle" font-family="sans-serif" font-size="7" fill="#F1FAEE" font-weight="bold">2 cases</text>
+</svg>

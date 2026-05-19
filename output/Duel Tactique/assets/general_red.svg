@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Général Rouge</title>
+  <circle cx="30" cy="30" r="27" fill="#E63946" stroke="#1D3557" stroke-width="2.5"/>
+  <circle cx="30" cy="30" r="22" fill="#E63946" stroke="#F4A261" stroke-width="1.5"/>
+  <polygon points="30,8 33,18 44,18 35,25 38,36 30,29 22,36 25,25 16,18 27,18" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+  <rect x="22" y="36" width="16" height="5" rx="2" fill="#1D3557"/>
+  <rect x="24" y="41" width="12" height="4" rx="1.5" fill="#1D3557"/>
+  <text x="30" y="53" font-family="serif" font-size="7" font-weight="bold" fill="#F1FAEE" text-anchor="middle">GÉN</text>
+</svg>

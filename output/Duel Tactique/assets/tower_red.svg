@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Tour Rouge</title>
+  <circle cx="30" cy="30" r="27" fill="#E63946" stroke="#1D3557" stroke-width="2.5"/>
+  <rect x="16" y="18" width="28" height="6" rx="1" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+  <rect x="16" y="22" width="4" height="4" rx="0.5" fill="#1D3557"/>
+  <rect x="28" y="22" width="4" height="4" rx="0.5" fill="#1D3557"/>
+  <rect x="40" y="22" width="4" height="4" rx="0.5" fill="#1D3557"/>
+  <rect x="19" y="24" width="22" height="18" rx="1" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+  <rect x="26" y="32" width="8" height="10" rx="1" fill="#1D3557"/>
+  <rect x="19" y="40" width="22" height="4" rx="1" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+</svg>

@@ -16,11 +16,16 @@ Stratégie : 3 appels séquentiels, un fichier à la fois.
 from __future__ import annotations
 
 import json
+import os
 import re
+import subprocess
+import tempfile
 from typing import TYPE_CHECKING
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+
+from src.utils.retry import with_retry
 
 if TYPE_CHECKING:
     from src.orchestrator import GameState
@@ -41,6 +46,38 @@ Règles impératives :
   écran de fin de partie.
 - Code complet, aucun TODO ni placeholder. Jouable immédiatement.\
 """
+
+
+def _validate_js_syntax(code: str) -> tuple[bool, str]:
+    """Vérifie la syntaxe JS via `node --check`. Non-bloquant."""
+    with tempfile.NamedTemporaryFile(suffix=".js", mode="w", encoding="utf-8", delete=False) as f:
+        f.write(code)
+        tmp_path = f.name
+    try:
+        result = subprocess.run(
+            ["node", "--check", tmp_path],
+            capture_output=True, text=True, timeout=10,
+        )
+        if result.returncode == 0:
+            return True, ""
+        error = (result.stderr or result.stdout).strip()
+        return False, error
+    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+        return True, ""  # node absent ou timeout : on laisse passer
+    finally:
+        os.unlink(tmp_path)
+
+
+def _strip_markdown_fences(code: str) -> str:
+    """Supprime les lignes de backticks ``` en début/fin si le modèle en a ajouté."""
+    lines = code.splitlines()
+    # Retire une ligne d'ouverture (``` ou ```lang)
+    if lines and re.match(r"^```", lines[0].strip()):
+        lines = lines[1:]
+    # Retire une ligne de fermeture
+    if lines and lines[-1].strip() == "```":
+        lines = lines[:-1]
+    return "\n".join(lines)
 
 
 def _game_context(state: GameState) -> str:
@@ -74,6 +111,7 @@ def _extract_code_block(text: str, lang: str = "") -> str:
     return text.strip()
 
 
+@with_retry()
 def _generate_game_js(llm: ChatAnthropic, context: str) -> str:
     messages = [
         SystemMessage(content=_SYSTEM_PROMPT),
@@ -85,9 +123,10 @@ def _generate_game_js(llm: ChatAnthropic, context: str) -> str:
         )),
     ]
     response = llm.invoke(messages)
-    return _extract_code_block(response.content, "javascript")
+    return _strip_markdown_fences(_extract_code_block(response.content, "javascript"))
 
 
+@with_retry()
 def _generate_index_html(llm: ChatAnthropic, context: str, game_js: str) -> str:
     messages = [
         SystemMessage(content=_SYSTEM_PROMPT),
@@ -101,9 +140,10 @@ def _generate_index_html(llm: ChatAnthropic, context: str, game_js: str) -> str:
         )),
     ]
     response = llm.invoke(messages)
-    return _extract_code_block(response.content, "html")
+    return _strip_markdown_fences(_extract_code_block(response.content, "html"))
 
 
+@with_retry()
 def _generate_style_css(llm: ChatAnthropic, context: str, game_js: str, index_html: str) -> str:
     messages = [
         SystemMessage(content=_SYSTEM_PROMPT),
@@ -120,7 +160,7 @@ def _generate_style_css(llm: ChatAnthropic, context: str, game_js: str, index_ht
         )),
     ]
     response = llm.invoke(messages)
-    return _extract_code_block(response.content, "css")
+    return _strip_markdown_fences(_extract_code_block(response.content, "css"))
 
 
 def run(state: GameState) -> dict:
@@ -129,6 +169,11 @@ def run(state: GameState) -> dict:
     context = _game_context(state)
 
     game_js    = _generate_game_js(llm, context)
+
+    ok, err = _validate_js_syntax(game_js)
+    if not ok:
+        game_js = f"// WARNING: syntax validation failed — {err}\n{game_js}"
+
     index_html = _generate_index_html(llm, context, game_js)
     style_css  = _generate_style_css(llm, context, game_js, index_html)
 

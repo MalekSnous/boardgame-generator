@@ -17,6 +17,8 @@ from typing import TYPE_CHECKING
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 
+from src.utils.retry import with_retry
+
 if TYPE_CHECKING:
     from src.orchestrator import GameState
 
@@ -137,6 +139,11 @@ qui l'a généré (flux Designer → Developer → Asset Generator → Tester �
 # Point d'entrée
 # ---------------------------------------------------------------------------
 
+@with_retry()
+def _invoke_batch(llm, messages_list: list) -> list:
+    return llm.batch(messages_list)
+
+
 def run(state: GameState) -> dict:
     """Génère rules.md et README.md en deux appels LLM ciblés."""
     llm = ChatAnthropic(model=MODEL, max_tokens=2048)
@@ -151,7 +158,7 @@ def run(state: GameState) -> dict:
     ]
 
     # Les deux appels sont indépendants — on les lance en parallèle via batch
-    results = llm.batch([rules_messages, readme_messages])
+    results = _invoke_batch(llm, [rules_messages, readme_messages])
 
     rules_md = results[0].content
     readme_md = results[1].content

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+  <title>Action Point Token</title>
+  <circle cx="25" cy="25" r="23" fill="#A8DADC" stroke="#1D3557" stroke-width="2.5"/>
+  <circle cx="25" cy="25" r="18" fill="#F1FAEE" stroke="#1D3557" stroke-width="1.5"/>
+  <text x="25" y="20" font-family="serif" font-size="8" font-weight="bold" fill="#1D3557" text-anchor="middle" dominant-baseline="middle">PA</text>
+  <rect x="13" y="26" width="24" height="10" rx="3" fill="#1D3557"/>
+  <text x="25" y="31" font-family="serif" font-size="9" font-weight="bold" fill="#F4A261" text-anchor="middle" dominant-baseline="middle">0-3</text>
+  <circle cx="25" cy="4" r="2.5" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+  <circle cx="25" cy="46" r="2.5" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+  <circle cx="4" cy="25" r="2.5" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+  <circle cx="46" cy="25" r="2.5" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+</svg>

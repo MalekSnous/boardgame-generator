@@ -19,12 +19,12 @@ from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
 from pydantic import BaseModel, Field
 
+from src.utils.retry import with_retry
+
 if TYPE_CHECKING:
     from src.orchestrator import GameState
 
 MODEL = "claude-sonnet-4-6"
-MAX_RETRIES = 2
-_RETRY_MARKER = "TESTER_RETRY"
 
 _SYSTEM_PROMPT = """\
 Tu es un testeur QA expert spécialisé dans les jeux de société en HTML/CSS/JavaScript vanilla.
@@ -42,6 +42,16 @@ Renvoie au Developer UNIQUEMENT si au moins un de ces problèmes est présent :
 5. **Erreur JS critique évidente** — variable clé utilisée sans être déclarée, appel de méthode
    sur `undefined`, boucle infinie probable.
 6. **Contradiction majeure** — une mécanique centrale des règles est complètement ignorée dans le code.
+
+### Checklist syntaxique obligatoire
+
+Avant tout autre jugement, vérifie les 5 points suivants. Si **au moins un** échoue, `passed` doit être `false` :
+
+- [ ] `gameState` est déclaré et initialisé avant tout usage
+- [ ] Toutes les fonctions appelées dans les event listeners sont bien définies
+- [ ] Aucune variable utilisée sans déclaration (`const`/`let`/`var`)
+- [ ] Aucune méthode appelée sur `null` ou `undefined` sans garde préalable
+- [ ] La condition de fin de partie (`checkWin` ou équivalent) est présente et correctement câblée
 
 ### Ce qui NE justifie PAS un échec
 
@@ -92,8 +102,12 @@ class ReviewResult(BaseModel):
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _count_retries(errors: list[str]) -> int:
-    return sum(1 for e in errors if e.startswith(_RETRY_MARKER))
+@with_retry()
+def _invoke_review(structured_llm, messages) -> "ReviewResult":
+    return structured_llm.invoke(messages)
+
+
+MAX_RETRIES = 2  # mirrored from orchestrator to format prompts
 
 
 def _build_prompt(state: GameState, retry_n: int) -> str:
@@ -171,23 +185,7 @@ def _format_test_results(result: ReviewResult, retry_n: int, forced: bool) -> st
 
 def run(state: GameState) -> dict:
     """Révise le code, décide de passer ou renvoyer au Developer."""
-    retry_n = _count_retries(state.errors)
-    forced_pass = retry_n >= MAX_RETRIES
-
-    if forced_pass:
-        # Sortie forcée de la boucle : le Documentaliste prend le relais
-        summary = (
-            f"Limite de {MAX_RETRIES} tentatives atteinte. "
-            "Le code est transmis au Documentaliste avec les défauts connus."
-        )
-        return {
-            "test_results": _format_test_results(
-                ReviewResult(passed=True, summary=summary), retry_n, forced=True
-            ),
-            "validation_passed": True,
-            "validation_errors": state.validation_errors,  # conserve les erreurs précédentes
-            "current_step": "tester_done_forced",
-        }
+    retry_n = state.retry_count
 
     llm = ChatAnthropic(model=MODEL, max_tokens=2048)
     structured_llm = llm.with_structured_output(ReviewResult)
@@ -197,17 +195,14 @@ def run(state: GameState) -> dict:
         HumanMessage(content=_build_prompt(state, retry_n)),
     ]
 
-    result: ReviewResult = structured_llm.invoke(messages)
+    result: ReviewResult = _invoke_review(structured_llm, messages)
 
-    # Mise à jour du compteur de retries dans errors si on renvoie au Developer
-    updated_errors = list(state.errors)
-    if not result.passed:
-        updated_errors.append(f"{_RETRY_MARKER}:{retry_n + 1}")
+    new_retry_count = retry_n + (0 if result.passed else 1)
 
     return {
         "test_results": _format_test_results(result, retry_n, forced=False),
         "validation_passed": result.passed,
         "validation_errors": result.critical_errors,
-        "errors": updated_errors,
+        "retry_count": new_retry_count,
         "current_step": "tester_done",
     }
