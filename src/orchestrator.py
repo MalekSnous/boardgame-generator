@@ -53,6 +53,9 @@ class GameState(BaseModel):
     game_mechanics: Optional[str] = None       # mécanique centrale
     components_description: Optional[str] = None  # pièces, plateau, cartes…
 
+    # --- Assets manifest (Agent Designer → Developer + Asset Generator) ---
+    asset_manifest: list[str] = Field(default_factory=list)
+
     # --- Code (Agent Développeur) ---
     game_js: Optional[str] = None
     index_html: Optional[str] = None

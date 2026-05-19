@@ -92,6 +92,12 @@ def _game_context(state: GameState) -> str:
         mechanics = {}
 
     mechanic_list = "\n".join(f"- {m}" for m in mechanics.get("mechanics", []))
+    assets_block = (
+        "Assets SVG disponibles (à utiliser dans le code) :\n"
+        + "\n".join(f"- assets/{f}" for f in (state.asset_manifest or []))
+        + "\nUtilise ces fichiers via <img src='assets/...'> ou en CSS background-image."
+        " Ne génère pas de visuels en dur."
+    ) if state.asset_manifest else ""
     return (
         f"Jeu : **{state.game_name}**\n"
         f"Joueurs : {mechanics.get('player_count', '')}\n"
@@ -99,6 +105,7 @@ def _game_context(state: GameState) -> str:
         f"Mécaniques :\n{mechanic_list}\n\n"
         f"Règles :\n{state.game_rules}\n\n"
         f"Composants :\n{state.components_description}"
+        + (f"\n\n{assets_block}" if assets_block else "")
     )
 
 
