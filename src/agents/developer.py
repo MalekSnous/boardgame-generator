@@ -5,12 +5,16 @@ Entrée  : game_name, game_mechanics (JSON), game_rules (Markdown),
           components_description
 Sorties : index_html, style_css, game_js
 
-Stratégie : 3 appels séquentiels, un fichier à la fois.
-  1. game.js  — toute la logique + liste des IDs/classes DOM utilisés
-  2. index.html — structure statique basée sur le DOM de game.js
-  3. style.css  — style de tous les éléments connus
+Stratégie : 5 appels séquentiels, chacun limité à MAX_TOKENS.
+  1. game.js PARTIE 1 (core)    — constantes, helpers, gameState, logique pure (pas de DOM)
+  2. game.js PARTIE 2 (actions) — fonctions d'action, capacités spéciales, événements
+  3. game.js PARTIE 3 (render)  — fonctions render*, handleCellClick, listeners, DOMContentLoaded
+  Les 3 parties sont concaténées en un seul game.js.
+  4. index.html — structure HTML basée sur les IDs/classes de la partie render
+  5. style.css  — style de tous les éléments connus
 
-Évite le problème de token exhaustion lié à l'encodage JSON du structured output.
+Découper game.js en 3 parties permet de gérer n'importe quelle complexité
+sans jamais dépasser la limite de tokens par appel.
 """
 
 from __future__ import annotations
@@ -112,13 +116,24 @@ def _extract_code_block(text: str, lang: str = "") -> str:
 
 
 @with_retry()
-def _generate_game_js(llm: ChatAnthropic, context: str) -> str:
+def _generate_game_js_core(llm: ChatAnthropic, context: str) -> str:
+    """PARTIE 1 — constantes, helpers, gameState, logique pure (aucun DOM)."""
     messages = [
         SystemMessage(content=_SYSTEM_PROMPT),
         HumanMessage(content=(
             f"{context}\n\n"
-            "Génère **game.js** complet : objet gameState, initialisation, rendu DOM, "
-            "gestion des clics/interactions, détection de victoire, bouton nouvelle partie.\n"
+            "Génère la **PARTIE 1/3** de game.js.\n\n"
+            "Contenu attendu :\n"
+            "- Constantes globales (tailles, limites, définitions de terrain, classes, événements)\n"
+            "- Variable `let gameState = {}`\n"
+            "- Helpers purs (shuffle, idx, pos, adjacent, totaux…)\n"
+            "- Fonctions d'initialisation : initGame(), buildGrid(), buildPlayers()\n"
+            "- Logging : addLog()\n"
+            "- Logique de jeu : movePlayer(), checkDeath(), checkVictory(), et toutes les "
+            "fonctions qui manipulent gameState sans toucher au DOM\n\n"
+            "⛔ INTERDIT dans cette partie : `document.`, `getElementById`, fonctions render*, "
+            "addEventListener, DOMContentLoaded.\n\n"
+            "Termine par le commentaire : `// === FIN PARTIE 1 ===`\n"
             "Commence directement par le code JavaScript, sans explication."
         )),
     ]
@@ -127,15 +142,78 @@ def _generate_game_js(llm: ChatAnthropic, context: str) -> str:
 
 
 @with_retry()
-def _generate_index_html(llm: ChatAnthropic, context: str, game_js: str) -> str:
+def _generate_game_js_actions(llm: ChatAnthropic, context: str, core: str) -> str:
+    """PARTIE 2 — actions joueur, capacités spéciales, événements."""
+    core_tail = core[-3000:] if len(core) > 3000 else core
     messages = [
         SystemMessage(content=_SYSTEM_PROMPT),
         HumanMessage(content=(
             f"{context}\n\n"
-            "Voici game.js déjà généré :\n"
-            f"```javascript\n{game_js}\n```\n\n"
-            "Génère **index.html** complet : structure HTML5 avec exactement les IDs et classes "
-            "utilisés dans game.js, liens vers style.css et game.js.\n"
+            "Voici la **PARTIE 1/3** déjà générée (fin) :\n"
+            f"```javascript\n{core_tail}\n```\n\n"
+            "Génère la **PARTIE 2/3** de game.js. Continue directement — ne redéclare rien.\n\n"
+            "Contenu attendu :\n"
+            "- Actions du joueur : actionCollect(), actionHeal(), actionBuild()\n"
+            "- Capacités spéciales : activateAbility(), hunterTrap(), healerHeal(), "
+            "engineerPick(), scoutReveal()\n"
+            "- Gestion des événements : advanceToEvent(), drawEvent(), applyEvent(), endTurn()\n\n"
+            "⛔ INTERDIT dans cette partie : fonctions render*, addEventListener, DOMContentLoaded.\n\n"
+            "Termine par le commentaire : `// === FIN PARTIE 2 ===`\n"
+            "Continue directement le code JavaScript, sans explication."
+        )),
+    ]
+    response = llm.invoke(messages)
+    return _strip_markdown_fences(_extract_code_block(response.content, "javascript"))
+
+
+@with_retry()
+def _generate_game_js_render(llm: ChatAnthropic, context: str, core: str, actions: str) -> str:
+    """PARTIE 3 — fonctions render*, handleCellClick, listeners, DOMContentLoaded."""
+    core_tail    = core[-1500:]    if len(core)    > 1500    else core
+    actions_tail = actions[-2000:] if len(actions) > 2000    else actions
+    messages = [
+        SystemMessage(content=_SYSTEM_PROMPT),
+        HumanMessage(content=(
+            f"{context}\n\n"
+            "Voici les PARTIES 1 et 2 déjà générées (fins) :\n"
+            f"**Fin PARTIE 1 :**\n```javascript\n{core_tail}\n```\n\n"
+            f"**Fin PARTIE 2 :**\n```javascript\n{actions_tail}\n```\n\n"
+            "Génère la **PARTIE 3/3** de game.js. Continue directement — ne redéclare rien.\n\n"
+            "Contenu attendu :\n"
+            "- Fonction render() qui dispatche vers les sous-renderers\n"
+            "- renderBoard() — grille complète avec brouillard, terrains, pions, highlights\n"
+            "- handleCellClick(cellIdx) — gère les clics sur les cases\n"
+            "- renderInfoPanel() — dispatche vers tous les sous-renderers du panneau\n"
+            "- renderActivePlayer(), renderPhase(), renderActions()\n"
+            "- renderInventory() — ressources, 8 emplacements visuels\n"
+            "- renderAllPlayers() — liste avec barres de PV\n"
+            "- renderLastEvent(), renderTurnBar(), renderLog()\n"
+            "- renderGameOver() — écran de victoire/défaite\n"
+            "- renderContextMessage() — message d'aide pour les modes de capacité\n"
+            "- attachListeners() — tous les boutons et interactions\n"
+            "- document.addEventListener('DOMContentLoaded', () => { attachListeners(); })\n\n"
+            "⚠️ Tous les IDs HTML utilisés doivent exister dans index.html : "
+            "crée-les de façon cohérente. "
+            "Documente les IDs principaux en commentaire en tête de cette partie.\n\n"
+            "Continue directement le code JavaScript, sans explication."
+        )),
+    ]
+    response = llm.invoke(messages)
+    return _strip_markdown_fences(_extract_code_block(response.content, "javascript"))
+
+
+@with_retry()
+def _generate_index_html(llm: ChatAnthropic, context: str, render_part: str) -> str:
+    """Génère index.html à partir de la partie render (qui contient tous les getElementById)."""
+    render_excerpt = render_part[:6000] if len(render_part) > 6000 else render_part
+    messages = [
+        SystemMessage(content=_SYSTEM_PROMPT),
+        HumanMessage(content=(
+            f"{context}\n\n"
+            "Voici la partie RENDER de game.js (fonctions render* et listeners) :\n"
+            f"```javascript\n{render_excerpt}\n```\n\n"
+            "Génère **index.html** complet : structure HTML5 avec exactement tous les IDs et "
+            "classes référencés dans ce code JS, liens vers style.css et game.js.\n"
             "Commence directement par le code HTML, sans explication."
         )),
     ]
@@ -164,17 +242,22 @@ def _generate_style_css(llm: ChatAnthropic, context: str, game_js: str, index_ht
 
 
 def run(state: GameState) -> dict:
-    """Génère les 3 fichiers du jeu en 3 appels séquentiels ciblés."""
-    llm = ChatAnthropic(model=MODEL, max_tokens=MAX_TOKENS)
+    """Génère les 3 fichiers du jeu en 5 appels séquentiels ciblés."""
+    llm     = ChatAnthropic(model=MODEL, max_tokens=MAX_TOKENS)
     context = _game_context(state)
 
-    game_js    = _generate_game_js(llm, context)
+    # game.js en 3 parties indépendantes (chacune ≤ MAX_TOKENS)
+    core    = _generate_game_js_core(llm, context)
+    actions = _generate_game_js_actions(llm, context, core)
+    render  = _generate_game_js_render(llm, context, core, actions)
+    game_js = "\n\n".join([core, actions, render])
 
     ok, err = _validate_js_syntax(game_js)
     if not ok:
         game_js = f"// WARNING: syntax validation failed — {err}\n{game_js}"
 
-    index_html = _generate_index_html(llm, context, game_js)
+    # index.html déduit des IDs dans la partie render (plus courte, plus ciblée)
+    index_html = _generate_index_html(llm, context, render)
     style_css  = _generate_style_css(llm, context, game_js, index_html)
 
     return {
