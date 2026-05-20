@@ -8,49 +8,107 @@
 </head>
 <body>
 
-  <header class="game-header">
-    <h1 class="game-title">⚔️ Duel Tactique</h1>
-    <p class="game-subtitle">Capturez le Général adverse pour remporter la victoire</p>
-  </header>
+  <!-- Écran de fin de partie -->
+  <div id="gameover-screen" class="hidden">
+    <div id="gameover-content">
+      <h1 id="gameover-title">Partie terminée</h1>
+      <p id="gameover-msg"></p>
+      <button id="btn-new-game-over">Nouvelle partie</button>
+    </div>
+  </div>
 
-  <main class="game-container">
+  <!-- Conteneur principal -->
+  <div id="game-board">
 
-    <section class="board-section">
-      <div class="board-labels-col">
-        <span>1</span><span>2</span><span>3</span>
-        <span>4</span><span>5</span><span>6</span>
-        <span>7</span><span>8</span>
-      </div>
-
-      <div class="board-wrapper">
-        <div class="board-labels-row">
-          <span>A</span><span>B</span><span>C</span>
-          <span>D</span><span>E</span><span>F</span>
-          <span>G</span><span>H</span>
-        </div>
-
-        <div id="game-board" class="game-board" role="grid" aria-label="Plateau de jeu"></div>
-
-        <div class="board-labels-row">
-          <span>A</span><span>B</span><span>C</span>
-          <span>D</span><span>E</span><span>F</span>
-          <span>G</span><span>H</span>
+    <!-- Plateau de jeu -->
+    <div id="board-section">
+      <div id="board-wrapper">
+        <div id="board-grid">
+          <!-- Cases générées dynamiquement par game.js -->
         </div>
       </div>
-    </section>
 
-    <aside id="info-panel" class="info-panel" aria-label="Panneau d'information">
-      <!-- Rendu dynamiquement par game.js -->
-    </aside>
+      <!-- Message d'aide contextuel -->
+      <div id="context-message"></div>
 
-  </main>
+      <!-- Boutons d'action principaux sous le plateau -->
+      <div id="action-buttons">
+        <button id="btn-draw-card">🃏 Piocher une carte</button>
+        <button id="btn-end-turn">⏭ Fin de tour</button>
+        <button id="btn-new-game">🔄 Nouvelle partie</button>
+        <button id="fog-toggle">👁 Brouillard</button>
+      </div>
+    </div>
 
-  <footer class="game-footer">
-    <section class="log-section" aria-label="Journal de partie">
-      <h2 class="log-title">📋 Journal de partie</h2>
-      <div id="game-log" class="game-log" aria-live="polite" aria-relevant="additions"></div>
-    </section>
-  </footer>
+    <!-- Panneau latéral d'informations -->
+    <div id="info-panel">
+
+      <!-- Joueur actif -->
+      <div id="active-player-section">
+        <div id="active-player-avatar"></div>
+        <div id="active-player-name">Joueur 1</div>
+        <div id="phase-label">🎯 Sélectionner une pièce</div>
+      </div>
+
+      <!-- Liste des joueurs avec PV -->
+      <div id="players-section">
+        <h3>Joueurs</h3>
+        <ul id="players-list">
+          <!-- Généré par game.js -->
+        </ul>
+      </div>
+
+      <!-- Barre de progression des tours -->
+      <div id="turn-section">
+        <h3>Tours</h3>
+        <div id="turn-bar">
+          <div id="turn-bar-fill"></div>
+        </div>
+        <div id="turn-count"></div>
+      </div>
+
+      <!-- Dernier événement -->
+      <div id="last-event-section">
+        <h3>Événement</h3>
+        <div id="last-event-box">—</div>
+      </div>
+
+      <!-- Main du joueur actif -->
+      <div id="hand-section">
+        <h3>Main</h3>
+        <div id="hand-cards">
+          <!-- Cartes générées par game.js -->
+        </div>
+      </div>
+
+      <!-- Inventaire / emplacements -->
+      <div id="inventory-section">
+        <h3>Inventaire</h3>
+        <div id="inventory-slots">
+          <div class="inventory-slot" data-slot="0"></div>
+          <div class="inventory-slot" data-slot="1"></div>
+          <div class="inventory-slot" data-slot="2"></div>
+          <div class="inventory-slot" data-slot="3"></div>
+          <div class="inventory-slot" data-slot="4"></div>
+          <div class="inventory-slot" data-slot="5"></div>
+          <div class="inventory-slot" data-slot="6"></div>
+          <div class="inventory-slot" data-slot="7"></div>
+        </div>
+      </div>
+
+      <!-- Journal des actions -->
+      <div id="log-section">
+        <h3>Journal</h3>
+        <ul id="log-list">
+          <!-- Généré par game.js -->
+        </ul>
+      </div>
+
+    </div>
+    <!-- fin #info-panel -->
+
+  </div>
+  <!-- fin #game-board -->
 
   <script src="game.js"></script>
 </body>

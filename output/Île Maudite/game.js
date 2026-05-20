@@ -540,7 +540,7 @@ function renderBoard() {
       const cell = gameState.grid[i];
       const terrain = TERRAIN_TYPES[cell.type];
       const div = document.createElement('div');
-      div.className = 'cell';
+      div.className = 'grid-cell';
       div.dataset.idx = i;
 
       const isBlocked = gameState.blockedCells.find(b => b.idx === i);
@@ -708,6 +708,7 @@ function renderActions() {
   document.getElementById('btn-ability').disabled = !isAction || cp.abilityUsedThisTurn;
 
   document.getElementById('btn-draw-event').classList.toggle('hidden', !isEvent);
+  document.getElementById('btn-pass').classList.toggle('hidden', !isAction);
 
   // Engineer pick sub-menu
   document.getElementById('engineer-pick-menu')
@@ -775,13 +776,13 @@ function renderAllPlayers() {
     const hpPct    = Math.max(0, (p.hp / p.maxHp) * 100);
 
     const div = document.createElement('div');
-    div.className = 'player-row' + (isActive ? ' player-active' : '');
+    div.className = 'player-row' + (isActive ? ' is-active' : '');
     div.dataset.playerId = p.id;
     div.innerHTML = `
-      <span class="player-emoji">${info.emoji}</span>
-      <div class="player-info">
+      <span class="player-row-emoji">${info.emoji}</span>
+      <div class="player-row-info">
         <div class="player-row-name">${p.name}${isActive ? ' ◀' : ''}</div>
-        <div class="player-row-hp-bar-wrap">
+        <div class="player-row-hp-bar-bg">
           <div class="player-row-hp-bar" style="width:${hpPct}%"></div>
         </div>
         <div class="player-row-hp-text">${p.hp}/${p.maxHp} PV</div>
@@ -916,21 +917,24 @@ function showStartScreen() {
 }
 
 function attachListeners() {
-  // Sélection du nombre de joueurs
+  // Sélection du nombre de joueurs — démarre la partie immédiatement
   document.querySelectorAll('.count-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.count-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
+      const count = parseInt(btn.dataset.count, 10);
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('game-screen').classList.remove('hidden');
+      initGame(count);
     });
   });
 
-  // Démarrer la partie
+  // Bouton commencer (fallback)
   document.getElementById('start-btn').addEventListener('click', () => {
     const active = document.querySelector('.count-btn.active');
     const count  = active ? parseInt(active.dataset.count, 10) : 2;
     document.getElementById('start-screen').classList.add('hidden');
     document.getElementById('game-screen').classList.remove('hidden');
-    document.getElementById('game-over-screen').classList.add('hidden');
     initGame(count);
   });
 
@@ -987,6 +991,14 @@ function attachListeners() {
   document.getElementById('engineer-cancel-btn').addEventListener('click', () => {
     gameState.abilityMode = null;
     render();
+  });
+
+  // Passer l'action (quand aucune action n'est disponible)
+  document.getElementById('btn-pass').addEventListener('click', () => {
+    if (gameState.phase === 'ACTION' && !gameState.actionDone && !gameState.gameOver) {
+      addLog(`⏭️ ${currentPlayer().name} passe son action.`, 'normal');
+      advanceToEvent();
+    }
   });
 
   // Piocher un événement

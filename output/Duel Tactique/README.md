@@ -1,55 +1,57 @@
 # Duel Tactique
 
-> Jeu de stratégie au tour par tour pour 2 joueurs — généré automatiquement par un pipeline multi-agent LangGraph + Claude Sonnet.
+> Jeu de stratégie pour 2 joueurs — généré automatiquement par un pipeline multi-agent LangGraph + Claude Sonnet
 
 ---
 
-## Jouer
+## Démarrage rapide
 
 ```bash
 # Aucune installation requise
-open index.html   # macOS
-# ou double-cliquez sur index.html dans votre explorateur de fichiers
+open index.html
 ```
 
-Le jeu tourne entièrement dans le navigateur, sans serveur ni dépendance externe.
+Ouvrez `index.html` dans votre navigateur. C'est tout.
 
 ---
 
 ## Concept
 
-**Duel Tactique** oppose deux joueurs sur un plateau quadrillé. Chaque camp commande une armée asymétrique — Généraux, Soldats, Chevaliers, Tours — et gère un pool de **Points d'Action** pour déplacer ses unités, capturer celles de l'adversaire et contrôler des zones stratégiques. **Capturer le Général ennemi** met fin à la partie.
+Duel Tactique oppose deux joueurs sur un plateau quadrillé. Chaque camp déplace ses pièces pour **capturer le drapeau adverse** tout en défendant le sien. La victoire passe par la lecture du terrain, la gestion des points de mouvement et l'exploitation du brouillard de guerre pour tromper l'adversaire.
 
-Les mécaniques clés : déplacement sur grille, capture par contact, zones de contrôle, gestion de ressources (PA) et asymétrie tactique entre les types d'unités.
+| Joueurs | Mécaniques clés |
+|---------|----------------|
+| 2 | Déplacement sur grille, capture de pièces, contrôle de territoire, bluff / information cachée, gestion de ressources |
 
 ---
 
 ## Architecture — Pipeline multi-agent
 
-Ce projet est le produit d'un pipeline **LangGraph** orchestrant 5 agents spécialisés **Claude Sonnet** en séquence :
+Ce projet est un **artefact de démonstration** produit par un pipeline LangGraph orchestrant cinq agents Claude Sonnet spécialisés, exécutés séquentiellement :
 
 ```
 Designer ──► Developer ──► Asset Generator ──► Tester ──► Documentalist
 ```
 
 | Agent | Responsabilité |
-|---|---|
-| **Designer** | Conception du concept, règles et mécaniques de jeu |
-| **Developer** | Génération du code (`index.html`, `style.css`, `game.js`) |
-| **Asset Generator** | Création des assets SVG (plateau, unités, tokens) |
-| **Tester** | Validation fonctionnelle et détection d'anomalies |
-| **Documentalist** | Rédaction des règles (`rules.md`) et du README |
+|-------|---------------|
+| **Designer** | Traduit le concept (`jeu de stratégie 2 joueurs`) en règles structurées, mécaniques et thème |
+| **Developer** | Génère le code source complet (HTML / CSS / JS) à partir des spécifications |
+| **Asset Generator** | Produit les assets SVG (plateau, pièces, tuiles, marqueurs, cartes) |
+| **Tester** | Analyse statiquement le code, identifie les erreurs et incohérences |
+| **Documentalist** | Rédige règles (`rules.md`) et documentation finale |
 
-Chaque agent reçoit le contexte produit par le précédent — aucune intervention humaine dans la boucle de génération.
+L'ensemble du pipeline s'exécute sans intervention humaine à partir d'un prompt unique.
 
 ---
 
 ## Stack
 
-- **LangGraph** — orchestration du pipeline multi-agent
-- **Claude Sonnet (Anthropic)** — modèle de langage pour chaque agent
-- **HTML5 / CSS3 / JavaScript** — runtime du jeu (vanilla, zéro dépendance)
-- **SVG** — assets graphiques générés programmatiquement
+- **Orchestration** : [LangGraph](https://github.com/langchain-ai/langgraph)
+- **LLM** : Claude Sonnet (Anthropic)
+- **Frontend** : HTML5 · CSS3 · JavaScript vanilla
+- **Assets** : SVG généré programmatiquement
+- **Runtime** : Navigateur uniquement — zéro dépendance
 
 ---
 
@@ -57,40 +59,46 @@ Chaque agent reçoit le contexte produit par le précédent — aucune intervent
 
 ```
 duel-tactique/
-├── index.html
-├── style.css
-├── game.js
-├── rules.md
+├── index.html                    # Point d'entrée — structure et UI
+├── style.css                     # Styles du plateau et des pièces
+├── game.js                       # Logique de jeu complète
+├── rules.md                      # Règles générées par l'agent Documentalist
 └── assets/
-    ├── board.svg
-    ├── general_blue.svg      ├── general_red.svg
-    ├── soldier_blue.svg      ├── soldier_red.svg
-    ├── knight_blue.svg       ├── knight_red.svg
-    ├── tower_blue.svg        ├── tower_red.svg
-    ├── action_point_token.svg
-    ├── turn_indicator_blue.svg
-    └── turn_indicator_red.svg
+    ├── board.svg                 # Plateau quadrillé
+    ├── piece_drapeau.svg         # Pièce : Drapeau
+    ├── piece_soldat.svg          # Pièce : Soldat
+    ├── piece_cavalier.svg        # Pièce : Cavalier
+    ├── piece_tour.svg            # Pièce : Tour
+    ├── piece_general.svg         # Pièce : Général
+    ├── card_bouclier.svg         # Carte : Bouclier
+    ├── card_sprint.svg           # Carte : Sprint
+    ├── card_piege.svg            # Carte : Piège
+    ├── tile_foret.svg            # Tuile terrain : Forêt
+    ├── tile_marais.svg           # Tuile terrain : Marais
+    └── marker_premier_joueur.svg # Marqueur premier joueur
 ```
 
 ---
 
-## Statut
+## ⚠️ Limitations connues
 
-| Critère | Résultat |
-|---|---|
-| Validation pipeline | ✅ Validé |
-| Dépendances externes | ✅ Aucune |
-| Compatibilité navigateur | Chrome, Firefox, Safari, Edge |
+Le **Tester** a détecté plusieurs anomalies dans le code généré. Le jeu se charge mais ne s'exécute pas correctement en l'état.
+
+Problèmes critiques identifiés :
+
+- **SyntaxError** (ligne ~775) : `gameState.currentPlayer` coupé par un saut de ligne — bloque le chargement du script entier
+- **`gameState.pieces` indéfini** : la logique de rendu cible un tableau plat inexistant ; l'état réel est structuré sous `players[n].pieces`
+- **Propriétés manquantes** dans `gameState` : `discardPile`, `gameOver`, `turnCount`, `terrain`, `flags`, `fogEnabled` utilisées sans initialisation
+- **Constantes `PIECE_TYPE` incohérentes** : les clés françaises (`SOLDAT`, `CAVALIER`, `TOUR`, `DRAPEAU`) ne correspondent pas aux clés anglaises déclarées → `undefined` partout
+- **`movePiece()` appelée avec un argument au lieu de deux** : la sélection de pièce n'est jamais transmise
+- **`shuffleArray` indéfinie** : seule `shuffle()` existe — `ReferenceError` à l'exécution
+- **`gameState.traps` utilisé comme tableau** alors que c'est un objet clé/valeur → `TypeError` sur `.map()` et `.filter()`
+- **`attachListeners()` tronquée** et jamais appelée au démarrage — les contrôles UI sont inactifs
+
+> Ces erreurs illustrent les limites actuelles de la génération de code par LLM sur des projets dépassant ~700 lignes. Elles constituent des cas de test concrets pour l'amélioration du pipeline.
 
 ---
 
-## Reproductibilité
+## Contexte
 
-Ce dépôt illustre la capacité du pipeline à produire un jeu jouable et documenté à partir d'un prompt de 10 mots :  
-> *« un jeu de stratégie simple pour 2 joueurs »*
-
-Pour régénérer un jeu depuis un nouveau concept, relancer le pipeline LangGraph avec votre propre prompt comme seed.
-
----
-
-*Généré par [Board Game Generator](../README.md) — architecture multi-agent LangGraph + Claude Sonnet.*
+Ce dépôt est un **démonstrateur technique** — son objectif est d'illustrer les capacités et les limites d'un pipeline de génération automatique de jeux, pas de fournir un produit fini. Le code généré, y compris ses défauts, est conservé tel quel en sortie de pipeline.
