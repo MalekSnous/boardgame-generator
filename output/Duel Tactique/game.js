@@ -506,7 +506,7 @@ function initGame() {
     currentPlayer: PLAYER.ONE,
     turn:          1,
     turnCount:     1,
-    phase:         PHASE.DRAW,
+    phase:         PHASE.SELECT,
     winner:        null,
     winReason:     '',
 
@@ -1506,13 +1506,13 @@ function renderBoard() {
   const grid = document.getElementById('board-grid');
   if (!grid) return;
 
-  // Calcul des cases valides mises en évidence
+  // Mouvements valides
   const validMoveSet = new Set();
   if (gameState.phase === PHASE.MOVE && gameState.selected && gameState.selected.validMoves) {
     gameState.selected.validMoves.forEach(i => validMoveSet.add(i));
   }
 
-  // Cases menacées par un piège actif
+  // Cases piégées (visibles au joueur actif)
   const trapSet = new Set(Object.keys(gameState.traps).map(Number));
 
   // Pièces par cellule
@@ -1521,13 +1521,8 @@ function renderBoard() {
     if (p.alive) pieceByCell[p.cellIdx] = p;
   });
 
-  // Drapeaux (déduits depuis gameState.pieces)
-  const flagByCell = {};
-  gameState.pieces.filter(p => p.type === PIECE_TYPE.FLAG && p.alive)
-    .forEach(f => flagByCell[f.cellIdx] = f);
-
-  // Terrains spéciaux (aucun dans ce jeu — placeholder vide)
-  const terrainByCell = {};
+  // Terrains spéciaux (depuis gameState.terrain)
+  const terrainByCell = gameState.terrain || {};
 
   grid.innerHTML = '';
 
@@ -1539,72 +1534,67 @@ function renderBoard() {
     const row = Math.floor(i / 8);
     const col = i % 8;
 
-    // Damier
-    cell.classList.add((row + col) % 2 === 0 ? 'cell-light' : 'cell-dark');
+    // Damier — classes attendues par le CSS
+    cell.classList.add((row + col) % 2 === 0 ? 'light' : 'dark');
 
     // Terrain spécial
     if (terrainByCell[i]) {
-      const terrain = terrainByCell[i];
-      cell.classList.add(terrain.type === TERRAIN_TYPE.FOREST ? 'cell-forest' : 'cell-swamp');
+      const t = terrainByCell[i];
+      cell.classList.add(t.type === TERRAIN_TYPE.FOREST ? 'terrain-forest' : 'terrain-swamp');
       const tImg = document.createElement('img');
-      tImg.src = TERRAIN_ASSETS[terrain.type];
-      tImg.alt = terrain.type;
-      tImg.className = 'terrain-img';
+      tImg.src = TERRAIN_ASSETS[t.type] || '';
+      tImg.alt = t.type;
+      tImg.className = 'terrain-icon';
       cell.appendChild(tImg);
     }
 
-    // Mise en évidence des mouvements valides
-    if (validMoveSet.has(i)) {
-      cell.classList.add('cell-valid-move');
-    }
-
-    // Piège visible (cases piégées)
+    // Piège visible du joueur actif
     if (trapSet.has(i)) {
-      cell.classList.add('cell-trapped');
-      const trapEl = document.createElement('div');
-      trapEl.className = 'trap-indicator';
-      trapEl.textContent = '⚠️';
-      cell.appendChild(trapEl);
+      cell.classList.add('has-trap');
     }
 
-    // Pièce sélectionnée
+    // Pièce sélectionnée — case verte
+    if (gameState.selected && gameState.selected.cellIdx === i && gameState.phase === PHASE.MOVE) {
+      cell.classList.add('selected');
+    }
+
+    // Mouvement valide — bleu (movable) ou rouge (attackable si ennemi)
+    if (validMoveSet.has(i)) {
+      const occupant = pieceByCell[i];
+      if (occupant && occupant.owner !== gameState.currentPlayer) {
+        cell.classList.add('attackable');
+      } else {
+        cell.classList.add('movable');
+      }
+    }
+
+    // Pièce sélectionnable en phase SELECT
     if (
-      gameState.selected &&
-      gameState.selected.cellIdx === i &&
-      gameState.phase === PHASE.MOVE
+      gameState.phase === PHASE.SELECT &&
+      pieceByCell[i] &&
+      pieceByCell[i].owner === gameState.currentPlayer &&
+      pieceByCell[i].type !== PIECE_TYPE.FLAG
     ) {
-      cell.classList.add('cell-selected');
+      cell.classList.add('selectable');
     }
 
-    // Drapeaux
-    if (flagByCell[i]) {
-      const flag = flagByCell[i];
-      const fEl = document.createElement('div');
-      fEl.className = `piece flag-piece player-${flag.owner}`;
-      const fImg = document.createElement('img');
-      fImg.src = PIECE_ASSETS[PIECE_TYPE.FLAG];
-      fImg.alt = 'Drapeau';
-      fEl.appendChild(fImg);
-      cell.appendChild(fEl);
-    }
-
-    // Pièces — brouillard de guerre
+    // Rendu de la pièce (drapeaux inclus via piece-flag)
     if (pieceByCell[i]) {
       const piece = pieceByCell[i];
       const isCurrentPlayer = piece.owner === gameState.currentPlayer;
-      const fogActive = gameState.fogEnabled && !isCurrentPlayer;
+      const fogActive = gameState.fogEnabled && !isCurrentPlayer && piece.type !== PIECE_TYPE.FLAG;
 
       const pEl = document.createElement('div');
       pEl.className = `piece-wrapper player-${piece.owner}`;
       if (piece.type === PIECE_TYPE.FLAG) pEl.classList.add('piece-flag');
-      if (piece.shieldActive) pEl.classList.add('piece-shielded');
+      if (piece.shielded) pEl.classList.add('piece-shielded');
 
       if (fogActive) {
         pEl.classList.add('piece-fog');
-        const fogImg = document.createElement('div');
-        fogImg.className = 'fog-overlay';
-        fogImg.textContent = '?';
-        pEl.appendChild(fogImg);
+        const fogDiv = document.createElement('div');
+        fogDiv.className = 'fog-overlay';
+        fogDiv.textContent = '?';
+        pEl.appendChild(fogDiv);
       } else {
         const pImg = document.createElement('img');
         pImg.src = PIECE_ASSETS[piece.type] || '';
@@ -1623,9 +1613,7 @@ function renderBoard() {
       cell.appendChild(pEl);
     }
 
-    // Interaction
     cell.addEventListener('click', () => handleCellClick(i));
-
     grid.appendChild(cell);
   }
 
@@ -1993,70 +1981,34 @@ function renderAllPlayers() {
     const aliveMobile = gameState.pieces.filter(
       p => p.owner === pid && p.alive && p.type !== PIECE_TYPE.FLAG
     ).length;
-    const hpPercent = Math.round((aliveMobile / totalMobile) * 100);
 
-    const card = document.createElement('div');
-    card.className = `player-card player-${pid}-card`;
-    if (pid === gameState.currentPlayer) card.classList.add('player-card-active');
+    const li = document.createElement('li');
+    if (pid === gameState.currentPlayer) li.classList.add('active-player');
 
-    // En-tête
-    const header = document.createElement('div');
-    header.className = 'player-card-header';
-
-    const avatar = document.createElement('span');
-    avatar.className = 'player-mini-avatar';
+    const avatar = document.createElement('div');
+    avatar.className = `player-list-avatar p${pid}`;
     avatar.textContent = pid === PLAYER.ONE ? '👤' : '👥';
-    header.appendChild(avatar);
+    li.appendChild(avatar);
 
     const name = document.createElement('span');
-    name.className = `player-card-name player-${pid}-color`;
+    name.className = `player-list-name p${pid}`;
     name.textContent = player.label;
-    header.appendChild(name);
+    li.appendChild(name);
+
+    const info = document.createElement('span');
+    info.className = 'player-list-pieces';
+    info.textContent = `${aliveMobile}/${totalMobile} · 🃏${player.hand.length} · 🏆${player.capturedCount || 0}`;
+    li.appendChild(info);
 
     if (pid === gameState.currentPlayer) {
       const marker = document.createElement('img');
       marker.src = 'assets/marker_premier_joueur.svg';
-      marker.alt = 'Joueur actif';
-      marker.className = 'active-marker';
-      header.appendChild(marker);
+      marker.alt = '▶';
+      marker.className = 'player-first-marker';
+      li.appendChild(marker);
     }
 
-    card.appendChild(header);
-
-    // Barre de pièces vivantes
-    const barWrap = document.createElement('div');
-    barWrap.className = 'hp-bar-wrap';
-    barWrap.title = `${aliveMobile}/${totalMobile} pièces mobiles`;
-
-    const barBg = document.createElement('div');
-    barBg.className = 'hp-bar-bg';
-
-    const barFill = document.createElement('div');
-    barFill.className = `hp-bar-fill player-${pid}-bar`;
-    barFill.style.width = `${hpPercent}%`;
-    barBg.appendChild(barFill);
-    barWrap.appendChild(barBg);
-
-    const barLabel = document.createElement('span');
-    barLabel.className = 'hp-bar-label';
-    barLabel.textContent = `${aliveMobile}/${totalMobile} pièces`;
-    barWrap.appendChild(barLabel);
-
-    card.appendChild(barWrap);
-
-    // Captures
-    const capLine = document.createElement('div');
-    capLine.className = 'player-stat';
-    capLine.textContent = `🏆 Captures : ${player.capturedCount || 0}`;
-    card.appendChild(capLine);
-
-    // Cartes en main
-    const cardLine = document.createElement('div');
-    cardLine.className = 'player-stat';
-    cardLine.textContent = `🃏 Cartes : ${player.hand.length}/3`;
-    card.appendChild(cardLine);
-
-    listEl.appendChild(card);
+    listEl.appendChild(li);
   });
 }
 
@@ -2086,18 +2038,15 @@ function renderLastEvent() {
 //  renderTurnBar — barre de progression des tours
 // ─────────────────────────────────────────────────────────
 function renderTurnBar() {
-  const bar = document.getElementById('turn-bar');
-  if (!bar) return;
-
-  const pct = Math.min(100, Math.round((gameState.turnCount / MAX_TURNS_DISPLAY) * 100));
-
-  bar.innerHTML = `
-    <div class="turn-bar-label">Tour ${gameState.turnCount}</div>
-    <div class="turn-bar-bg">
-      <div class="turn-bar-fill" style="width:${pct}%"></div>
-    </div>
-    <div class="turn-bar-deck">🃏 Deck : ${gameState.deck.length} cartes</div>
-  `;
+  const fill  = document.getElementById('turn-bar-fill');
+  const count = document.getElementById('turn-count');
+  if (fill) {
+    const pct = Math.min(100, Math.round((gameState.turnCount / MAX_TURNS_DISPLAY) * 100));
+    fill.style.width = pct + '%';
+  }
+  if (count) {
+    count.textContent = `Tour ${gameState.turnCount} · Deck : ${gameState.deck.length} cartes`;
+  }
 }
 
 // ─────────────────────────────────────────────────────────

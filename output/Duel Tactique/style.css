@@ -320,8 +320,7 @@ html, body {
 }
 .piece-wrapper.piece-flag.player-2 {
   filter: drop-shadow(0 0 8px rgba(239,154,154,1)) drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-  /* Flip horizontally for player 2 */
-  transform: scaleX(-1);
+  transform: translate(-50%, -50%) scaleX(-1);
 }
 
 /* Combat value badge */
@@ -789,19 +788,25 @@ body.player-2-active #active-player-section {
 #inventory-slots {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 5px;
 }
 
 .inventory-slot {
-  height: 44px;
+  min-width: 0;
+  height: auto;
+  min-height: 56px;
   border-radius: var(--radius-sm);
   background: rgba(255,255,255,0.04);
   border: 1px dashed var(--color-border);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
+  padding: 4px 2px;
   transition: border-color var(--transition), background var(--transition);
   cursor: default;
+  overflow: hidden;
 }
 
 .inventory-slot:hover {
@@ -810,9 +815,28 @@ body.player-2-active #active-player-section {
 }
 
 .inventory-slot img {
-  width: 28px;
-  height: 28px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+.inventory-value {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.inventory-label {
+  font-size: 8px;
+  color: var(--color-text-muted);
+  text-align: center;
+  line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -838,4 +862,30 @@ body.player-2-active #active-player-section {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+/* Couleurs des joueurs (utilisées dans les spans de nom, titre fin de partie…) */
+.player-1-color { color: var(--color-p1) !important; }
+.player-2-color { color: var(--color-p2) !important; }
+.player-1-avatar { border-color: var(--color-p1) !important; box-shadow: 0 0 12px rgba(79,195,247,0.4) !important; }
+.player-2-avatar { border-color: var(--color-p2) !important; box-shadow: 0 0 12px rgba(239,154,154,0.4) !important; }
+.player-name { font-size: 16px; font-weight: 700; }
+
+/* Message contextuel — couleurs selon le type */
+.context-info  { color: var(--color-accent2) !important; }
+.context-error { color: var(--color-accent)  !important; }
+
+/* Info panel — empêche tout overflow horizontal */
+#info-panel,
+#info-panel > * {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Turn count text */
+#turn-count {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: 4px;
 }
