@@ -502,8 +502,10 @@ function initGame() {
 
   gameState = {
     status:        GAME_STATUS.PLAYING,
+    gameOver:      false,
     currentPlayer: PLAYER.ONE,
     turn:          1,
+    turnCount:     1,
     phase:         PHASE.DRAW,
     winner:        null,
     winReason:     '',
@@ -519,15 +521,19 @@ function initGame() {
     pieces: [...player1.pieces, ...player2.pieces],
 
     deck,
+    discardPile:   [],
 
-    traps: {},
+    traps:   {},
+    terrain: {},
 
     selected: {
       pieceId:      null,
+      cellIdx:      null,
       validMoves:   [],
       cardToPlay:   null,
       sprintActive: false,
       shieldActive: false,
+      placingTrap:  false,
     },
 
     log: [],
@@ -625,6 +631,7 @@ function checkVictory() {
     const opFlag = opponentPlayer.pieces.find(p => p.type === PIECE_TYPE.FLAG);
     if (opFlag && !opFlag.alive) {
       gameState.status    = GAME_STATUS.OVER;
+      gameState.gameOver  = true;
       gameState.winner    = pid;
       gameState.winReason = `${gameState.players[pid].label} a capturé le Drapeau adverse !`;
       addLog('system', `🏆 Victoire de ${gameState.players[pid].label} — ${gameState.winReason}`);
@@ -637,6 +644,7 @@ function checkVictory() {
     );
     if (mobileOpponent.length === 0) {
       gameState.status    = GAME_STATUS.OVER;
+      gameState.gameOver  = true;
       gameState.winner    = pid;
       gameState.winReason = `${gameState.players[pid].label} a éliminé toutes les pièces adverses !`;
       addLog('system', `🏆 Victoire de ${gameState.players[pid].label} — ${gameState.winReason}`);
@@ -653,6 +661,7 @@ function checkVictory() {
   if (!canMove && current.hand.length === 0 && gameState.deck.length === 0) {
     const opponent = gameState.currentPlayer === PLAYER.ONE ? PLAYER.TWO : PLAYER.ONE;
     gameState.status    = GAME_STATUS.OVER;
+    gameState.gameOver  = true;
     gameState.winner    = opponent;
     gameState.winReason = `${current.label} est bloqué et ne peut plus jouer !`;
     addLog('system', `🏆 Victoire de ${gameState.players[opponent].label} — ${gameState.winReason}`);
@@ -857,7 +866,7 @@ function actionCollect() {
     if (gameState.discardPile.length === 0) {
       return { ok: false, message: 'Aucune carte disponible dans le deck ni la défausse.' };
     }
-    gameState.deck = shuffleArray([...gameState.discardPile]);
+    gameState.deck = shuffle([...gameState.discardPile]);
     gameState.discardPile = [];
     addLog('system', '🔄 Deck reconstitué depuis la défausse.');
   }
@@ -1293,9 +1302,9 @@ function applyEvent(event) {
         const CENTER_CELLS = [];
         for (let r = 3; r <= 5; r++) {
           for (let c = 3; c <= 5; c++) {
-            const idx = r * COLS + c;
-            if (!getPieceAtCell(idx) && !gameState.traps[idx]) {
-              CENTER_CELLS.push(idx);
+            const cellI = r * BOARD_SIZE + c;
+            if (!getPieceAtCell(cellI) && !gameState.traps[cellI]) {
+              CENTER_CELLS.push(cellI);
             }
           }
         }
@@ -1338,6 +1347,7 @@ function endTurn() {
   // Réinitialiser les bonus de sprint / shield du sélecteur
   gameState.selected = {
     pieceId:      null,
+    cellIdx:      null,
     validMoves:   [],
     shieldActive: false,
     sprintActive: false,
@@ -1381,7 +1391,7 @@ function endTurn() {
     p.owner === gameState.currentPlayer &&
     p.alive &&
     p.type !== PIECE_TYPE.FLAG &&
-    getValidMoves(p).length > 0
+    computeValidMoves(p, false).length > 0
   );
   const hasCards = current.hand.length > 0;
 
@@ -1498,13 +1508,12 @@ function renderBoard() {
 
   // Calcul des cases valides mises en évidence
   const validMoveSet = new Set();
-  if (gameState.phase === PHASE.MOVE && gameState.selected) {
-    const moves = getValidMoves(gameState.selected);
-    moves.forEach(idx => validMoveSet.add(idx));
+  if (gameState.phase === PHASE.MOVE && gameState.selected && gameState.selected.validMoves) {
+    gameState.selected.validMoves.forEach(i => validMoveSet.add(i));
   }
 
   // Cases menacées par un piège actif
-  const trapSet = new Set(Object.values(gameState.traps).map(t => t.cellIdx));
+  const trapSet = new Set(Object.keys(gameState.traps).map(Number));
 
   // Pièces par cellule
   const pieceByCell = {};
@@ -1571,7 +1580,7 @@ function renderBoard() {
     if (flagByCell[i]) {
       const flag = flagByCell[i];
       const fEl = document.createElement('div');
-      fEl.className = `piece flag-piece player-${flag.owner + 1}`;
+      fEl.className = `piece flag-piece player-${flag.owner}`;
       const fImg = document.createElement('img');
       fImg.src = PIECE_ASSETS[PIECE_TYPE.FLAG];
       fImg.alt = 'Drapeau';
@@ -1586,7 +1595,7 @@ function renderBoard() {
       const fogActive = gameState.fogEnabled && !isCurrentPlayer;
 
       const pEl = document.createElement('div');
-      pEl.className = `piece-wrapper player-${piece.owner + 1}`;
+      pEl.className = `piece-wrapper player-${piece.owner}`;
       if (piece.type === PIECE_TYPE.FLAG) pEl.classList.add('piece-flag');
       if (piece.shieldActive) pEl.classList.add('piece-shielded');
 
@@ -1639,11 +1648,16 @@ function handleCellClick(cellIdx) {
         if (!piece) {
           return { ok: false, message: 'Aucune pièce sélectionnable ici.' };
         }
-        const moves = getValidMoves(piece);
+        const moves = computeValidMoves(piece, gameState.selected.sprintActive || false);
         if (moves.length === 0) {
           return { ok: false, message: 'Cette pièce ne peut pas se déplacer.' };
         }
-        gameState.selected = piece;
+        gameState.selected = {
+          ...gameState.selected,
+          pieceId:    piece.id,
+          cellIdx:    piece.cellIdx,
+          validMoves: moves,
+        };
         gameState.phase = PHASE.MOVE;
         addLog(
           gameState.currentPlayer === PLAYER.ONE ? 'p1' : 'p2',
@@ -1655,12 +1669,31 @@ function handleCellClick(cellIdx) {
       case PHASE.MOVE: {
         // Désélectionner si on re-clique sur la même pièce
         if (gameState.selected && gameState.selected.cellIdx === cellIdx) {
-          gameState.selected = null;
+          gameState.selected = {
+            pieceId:      null,
+            cellIdx:      null,
+            validMoves:   [],
+            shieldActive: gameState.selected.shieldActive,
+            sprintActive: gameState.selected.sprintActive,
+            placingTrap:  gameState.selected.placingTrap,
+          };
           gameState.phase = PHASE.SELECT;
           addLog('system', '↩️ Sélection annulée.');
           return { ok: true, message: 'Sélection annulée.' };
         }
-        return movePiece(cellIdx);
+        const moveResult = movePiece(gameState.selected.pieceId, cellIdx);
+        if (moveResult.ok && !gameState.gameOver) {
+          gameState.phase = PHASE.ACTION;
+          gameState.selected = {
+            pieceId:      null,
+            cellIdx:      null,
+            validMoves:   [],
+            shieldActive: gameState.selected.shieldActive,
+            sprintActive: false,
+            placingTrap:  false,
+          };
+        }
+        return moveResult;
       }
 
       case PHASE.ACTION: {
@@ -1730,9 +1763,9 @@ function renderActivePlayer() {
 
   const current = gameState.players[gameState.currentPlayer];
   nameEl.textContent = current.label;
-  nameEl.className   = `player-name player-${gameState.currentPlayer + 1}-color`;
+  nameEl.className   = `player-name player-${gameState.currentPlayer}-color`;
 
-  avatarEl.className = `player-avatar player-${gameState.currentPlayer + 1}-avatar`;
+  avatarEl.className = `player-avatar player-${gameState.currentPlayer}-avatar`;
   avatarEl.textContent = gameState.currentPlayer === PLAYER.ONE ? '👤' : '👥';
 }
 
@@ -2079,7 +2112,7 @@ function renderLog() {
   const entries = gameState.log.slice(-20).reverse();
   entries.forEach(entry => {
     const li = document.createElement('li');
-    li.className = `log-entry log-${entry.type}`;
+    li.className = `log-entry log-${entry.category}`;
     li.textContent = entry.message;
     logEl.appendChild(li);
   });
@@ -2102,7 +2135,7 @@ function renderGameOver() {
 
     if (titleEl) {
       titleEl.textContent = `🏆 ${winner.label} remporte la partie !`;
-      titleEl.className = `gameover-title player-${gameState.winner + 1}-color`;
+      titleEl.className = `gameover-title player-${gameState.winner}-color`;
     }
 
     if (msgEl) {
