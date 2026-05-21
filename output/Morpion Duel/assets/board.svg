@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <title>Morpion Duel - Plateau de jeu</title>
+  <defs>
+    <style>
+      .board-bg { fill: #F1FAEE; }
+      .panel-bg { fill: #1D3557; }
+      .grid-line { stroke: #1D3557; stroke-width: 4; stroke-linecap: round; }
+      .cell-hover { fill: #A8DADC; fill-opacity: 0.3; }
+      .player1-sym { stroke: #E63946; stroke-width: 6; stroke-linecap: round; fill: none; }
+      .player2-sym { stroke: #457B9D; stroke-width: 6; stroke-linecap: round; fill: none; }
+      .accent-fill { fill: #F4A261; }
+      .neutral-fill { fill: #A8DADC; }
+      .win-line { stroke: #F4A261; stroke-width: 7; stroke-linecap: round; opacity: 0.85; }
+      .label { font-family: Georgia, serif; fill: #F1FAEE; font-size: 14px; text-anchor: middle; }
+      .title-text { font-family: Georgia, serif; fill: #F1FAEE; font-size: 20px; font-weight: bold; text-anchor: middle; }
+      .indicator-text { font-family: Georgia, serif; font-size: 13px; text-anchor: middle; }
+      .result-text { font-family: Georgia, serif; fill: #1D3557; font-size: 16px; font-weight: bold; text-anchor: middle; }
+      .replay-text { font-family: Georgia, serif; fill: #F1FAEE; font-size: 13px; font-weight: bold; text-anchor: middle; }
+    </style>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#1D3557" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Fond général -->
+  <rect width="400" height="400" fill="#1D3557"/>
+
+  <!-- Bandeau titre -->
+  <rect x="0" y="0" width="400" height="52" fill="#1D3557"/>
+  <text x="200" y="32" class="title-text">♟ MORPION DUEL</text>
+
+  <!-- Plateau principal -->
+  <rect x="30" y="62" width="340" height="230" rx="14" ry="14" class="board-bg" filter="url(#shadow)"/>
+
+  <!-- Cellules cliquables (fond hover simulé) -->
+  <!-- Ligne 0 -->
+  <rect x="38" y="70" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <rect x="148" y="70" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <rect x="258" y="70" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <!-- Ligne 1 -->
+  <rect x="38" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <rect x="148" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <rect x="258" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.18"/>
+  <!-- Ligne 2 -->
+  <rect x="38" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.0"/>
+  <rect x="148" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.0"/>
+  <rect x="258" y="180" width="100" height="100" rx="6" ry="6" fill="#A8DADC" fill-opacity="0.0"/>
+
+  <!-- Lignes de grille verticales -->
+  <line x1="145" y1="74" x2="145" y2="286" class="grid-line"/>
+  <line x1="255" y1="74" x2="255" y2="286" class="grid-line"/>
+
+  <!-- Lignes de grille horizontales -->
+  <line x1="34" y1="176" x2="366" y2="176" class="grid-line"/>
+  <line x1="34" y1="286" x2="366" y2="286" class="grid-line"/>
+
+  <!-- Symboles d'exemple : X en (0,0), O en (1,1), X en (2,0) -->
+  <!-- X en case (0,0) -->
+  <line x1="60" y1="95" x2="118" y2="153" class="player1-sym"/>
+  <line x1="118" y1="95" x2="60" y2="153" class="player1-sym"/>
+
+  <!-- O en case (1,1) -->
+  <circle cx="200" cy="231" r="28" class="player2-sym"/>
+
+  <!-- X en case (2,0) -->
+  <line x1="280" y1="95" x2="338" y2="153" class="player1-sym"/>
+  <line x1="338" y1="95" x2="280" y2="153" class="player1-sym"/>
+
+  <!-- O en case (0,2) -->
+  <circle cx="88" cy="341" r="28" class="player2-sym"/>
+
+  <!-- Indicateur de tour -->
+  <rect x="30" y="302" width="340" height="42" rx="10" ry="10" fill="#457B9D" filter="url(#shadow)"/>
+  <circle cx="62" cy="323" r="10" fill="#A8DADC"/>
+  <text x="200" y="328" class="indicator-text" fill="#F1FAEE">Tour : Joueur 1</text>
+  <!-- Pastille joueur actif -->
+  <circle cx="62" cy="323" r="10" fill="#E63946"/>
+  <text x="62" y="328" font-family="Georgia,serif" font-size="12" font-weight="bold" fill="#F1FAEE" text-anchor="middle">1</text>
+
+  <!-- Bandeau résultat -->
+  <rect x="70" y="352" width="260" height="36" rx="10" ry="10" fill="#F4A261" filter="url(#shadow)"/>
+  <text x="200" y="376" class="result-text">🏆 Joueur 1 remporte la partie !</text>
+
+  <!-- Bouton Rejouer -->
+  <rect x="140" y="358" width="120" height="24" rx="8" ry="8" fill="#1D3557"/>
+  <!-- Ligne de victoire diagonale (exemple) -->
+  <!-- Bouton Rejouer affiché en bas -->
+  <rect x="130" y="356" width="140" height="28" rx="9" ry="9" fill="#2A9D8F" filter="url(#shadow)"/>
+  <text x="200" y="375" class="replay-text">↺  Rejouer</text>
+</svg>

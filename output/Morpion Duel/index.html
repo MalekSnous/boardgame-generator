@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Morpion Duel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PLATEAU DE JEU
+         buildBoardDOM() vide et recrée : img#board-bg + div#cell-grid
+    ════════════════════════════════════════════════════════════ -->
+    <main id="game-board">
+    </main>
+
+    <!-- ═══════════════════════════════════════════════════════════
+         PANNEAU D'INFORMATION
+    ════════════════════════════════════════════════════════════ -->
+    <aside id="info-panel">
+
+      <!-- Titre -->
+      <h1 class="game-title">Morpion Duel</h1>
+
+      <!-- Indicateur du joueur actif (imgs retirées — buildInfoPanel les recrée) -->
+      <section id="active-player" aria-live="polite">
+        <div class="active-player__details">
+          <span id="player-label" class="player-label">Joueur 1 (X)</span>
+        </div>
+      </section>
+
+      <!-- Phase courante -->
+      <section id="phase-section">
+        <span id="phase-label" class="phase-label">Phase : Placement</span>
+      </section>
+
+      <!-- Indicateur de tour — renommé turn-count → turn-info -->
+      <section id="turn-section">
+        <div id="turn-bar" role="progressbar" aria-valuemin="0" aria-valuemax="9">
+          <div id="turn-bar-fill"></div>
+        </div>
+        <span id="turn-info" class="turn-info">Tour de Joueur 1 (X)</span>
+      </section>
+
+      <!-- Liste des joueurs (imgs retirées — scores lus directement par game.js) -->
+      <section id="players-section">
+        <h2 class="section-title">Joueurs</h2>
+        <ul id="players-list" class="players-list">
+          <li class="player-entry player-entry--1" data-player="1">
+            <span class="player-entry__name">Joueur 1</span>
+            <span class="player-entry__score" id="score-player1">0</span>
+          </li>
+          <li class="player-entry player-entry--2" data-player="2">
+            <span class="player-entry__name">Joueur 2</span>
+            <span class="player-entry__score" id="score-player2">0</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Message contextuel d'aide -->
+      <section id="context-section">
+        <p id="context-message" class="context-message" aria-live="polite"></p>
+      </section>
+
+      <!-- Journal des actions — log-container conservé, game-log ajouté -->
+      <section id="log-section">
+        <h2 class="section-title">Journal</h2>
+        <div id="log-container" class="log-container" aria-live="polite" aria-relevant="additions">
+          <ul id="game-log"></ul>
+        </div>
+      </section>
+
+      <!-- Boutons — new-game-btn → btn-new-game ; btn-reset-scores ajouté -->
+      <section id="actions-section">
+        <button id="btn-new-game" class="btn btn--new-game" aria-label="Nouvelle partie">
+          Nouvelle partie
+        </button>
+        <button id="btn-reset-scores" class="btn btn--reset" aria-label="Réinitialiser les scores">
+          Réinitialiser scores
+        </button>
+      </section>
+
+    </aside>
+
+    <!-- overlay de fin de partie (#game-overlay) créé dynamiquement par buildOverlay()
+         et appendé à <body>. L'ancien #game-over-screen statique est supprimé. -->
+
+  </div><!-- /#app -->
+
+  <script src="game.js"></script>
+</body>
+</html>

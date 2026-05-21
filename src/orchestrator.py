@@ -68,6 +68,7 @@ class GameState(BaseModel):
     test_results: Optional[str] = None
     validation_passed: bool = False
     validation_errors: list[str] = Field(default_factory=list)
+    fixes_required: list[str] = Field(default_factory=list)
 
     # --- Documentation (Agent Documentaliste) ---
     rules_md: Optional[str] = None
@@ -181,7 +182,7 @@ def save_output(state: GameState, output_dir: str) -> None:
 # Routage conditionnel (exemple : retry depuis le testeur)
 # ---------------------------------------------------------------------------
 
-MAX_RETRIES = 2
+MAX_RETRIES = 3
 
 
 def route_after_tester(state: GameState) -> str:

@@ -248,24 +248,71 @@ def _generate_style_css(llm: ChatAnthropic, context: str, game_js: str, index_ht
     return _strip_markdown_fences(_extract_code_block(response.content, "css"))
 
 
+@with_retry()
+def _fix_game_js(
+    llm: ChatAnthropic,
+    context: str,
+    game_js: str,
+    fixes_required: list[str],
+) -> str:
+    """
+    Applique les corrections ciblées du Tester sans régénérer
+    le fichier entier. Moins coûteux, plus précis qu'une
+    régénération complète.
+    """
+    fixes_block = "\n".join(f"- {f}" for f in fixes_required)
+    game_js_excerpt = game_js[:12000] if len(game_js) > 12000 else game_js
+
+    messages = [
+        SystemMessage(content=_SYSTEM_PROMPT),
+        HumanMessage(content=(
+            f"{context}\n\n"
+            "Voici game.js actuel :\n"
+            f"```javascript\n{game_js_excerpt}\n```\n\n"
+            "Le Testeur a identifié ces erreurs bloquantes à corriger :\n"
+            f"{fixes_block}\n\n"
+            "Règles impératives :\n"
+            "- Corrige UNIQUEMENT les fonctions et variables mentionnées\n"
+            "- Ne réécris PAS les fonctions qui fonctionnent correctement\n"
+            "- Retourne le fichier game.js COMPLET avec les corrections appliquées\n"
+            "- Aucun TODO ni placeholder\n"
+            "- Commence directement par le code JavaScript, sans explication"
+        )),
+    ]
+    response = llm.invoke(messages)
+    return _strip_markdown_fences(
+        _extract_code_block(response.content, "javascript")
+    )
+
+
 def run(state: GameState) -> dict:
-    """Génère les 3 fichiers du jeu en 5 appels séquentiels ciblés."""
+    """Génère les 3 fichiers du jeu ; au retry, corrige game.js de façon ciblée."""
     llm     = ChatAnthropic(model=MODEL, max_tokens=MAX_TOKENS)
     context = _game_context(state)
 
-    # game.js en 3 parties indépendantes (chacune ≤ MAX_TOKENS)
-    core    = _generate_game_js_core(llm, context)
-    actions = _generate_game_js_actions(llm, context, core)
-    render  = _generate_game_js_render(llm, context, core, actions)
-    game_js = "\n\n".join([core, actions, render])
+    # Retry : corrections ciblées si le Tester a fourni des fixes
+    if state.retry_count > 0 and state.fixes_required and state.game_js:
+        game_js = _fix_game_js(llm, context, state.game_js, state.fixes_required)
+    else:
+        # Première génération : 3 parties séquentielles
+        core    = _generate_game_js_core(llm, context)
+        actions = _generate_game_js_actions(llm, context, core)
+        render  = _generate_game_js_render(llm, context, core, actions)
+        game_js = "\n\n".join([core, actions, render])
 
     ok, err = _validate_js_syntax(game_js)
     if not ok:
         game_js = f"// WARNING: syntax validation failed — {err}\n{game_js}"
 
-    # index.html déduit des IDs dans la partie render (plus courte, plus ciblée)
-    index_html = _generate_index_html(llm, context, render)
-    style_css  = _generate_style_css(llm, context, game_js, index_html)
+    # index.html et style.css : régénérés seulement à la première passe
+    # Au retry, on les conserve sauf si game.js a changé de structure
+    if state.retry_count > 0 and state.index_html and state.style_css:
+        index_html = state.index_html
+        style_css  = state.style_css
+    else:
+        render_part = render if state.retry_count == 0 else game_js[-4000:]
+        index_html  = _generate_index_html(llm, context, render_part)
+        style_css   = _generate_style_css(llm, context, game_js, index_html)
 
     return {
         "game_js":    game_js,

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 50">
+  <title>Bouton Rejouer</title>
+  <rect x="2" y="2" width="156" height="46" rx="12" ry="12" fill="#F4A261" stroke="#1D3557" stroke-width="2.5"/>
+  <rect x="5" y="5" width="150" height="40" rx="10" ry="10" fill="#F4A261" opacity="0.4"/>
+  <path d="M32 25 A10 10 0 1 1 38 33" stroke="#1D3557" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <polygon points="36,36 42,31 38,27" fill="#1D3557"/>
+  <text x="90" y="31" font-family="serif" font-size="16" font-weight="bold" fill="#1D3557" text-anchor="middle" dominant-baseline="middle">Rejouer</text>
+</svg>
