@@ -23,7 +23,7 @@ import tempfile
 from typing import TYPE_CHECKING
 
 from langchain_anthropic import ChatAnthropic
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
+from langchain_core.messages import HumanMessage, SystemMessage
 
 from src.utils.retry import with_retry
 
@@ -62,7 +62,7 @@ def _validate_js_syntax(code: str) -> tuple[bool, str]:
             return True, ""
         error = (result.stderr or result.stdout).strip()
         return False, error
-    except (FileNotFoundError, subprocess.TimeoutExpired) as e:
+    except (FileNotFoundError, subprocess.TimeoutExpired):
         return True, ""  # node absent ou timeout : on laisse passer
     finally:
         os.unlink(tmp_path)

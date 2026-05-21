@@ -19,7 +19,6 @@ from typing import TYPE_CHECKING
 
 from langchain_anthropic import ChatAnthropic
 from langchain_core.messages import HumanMessage, SystemMessage
-from pydantic import BaseModel, Field
 
 from src.utils.retry import with_retry
 

@@ -1,5 +1,8 @@
 # Boardgame Generator
 
+[![CI](https://github.com/MalekSnous/boardgame-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/MalekSnous/boardgame-generator/actions/workflows/ci.yml)
+[![Deploy](https://github.com/MalekSnous/boardgame-generator/actions/workflows/deploy.yml/badge.svg)](https://github.com/MalekSnous/boardgame-generator/actions/workflows/deploy.yml)
+
 Pipeline multi-agent pour générer des jeux de société jouables dans le navigateur, piloté par Claude via LangGraph.
 
 ## Architecture

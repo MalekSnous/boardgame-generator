@@ -11,7 +11,6 @@ import time
 from typing import Annotated, Optional
 
 from dotenv import load_dotenv
-from langchain_anthropic import ChatAnthropic
 from langgraph.graph import END, START, StateGraph
 from langgraph.graph.message import add_messages
 from pydantic import BaseModel, Field, field_validator
