@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 120">
+  <title>Bannière Victoire - Morpion Duel</title>
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1D3557;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#F4A261;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#1D3557;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#F1FAEE;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#A8DADC;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-color="#1D3557" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Fond principal -->
+  <rect width="400" height="120" rx="16" ry="16" fill="url(#bgGrad)"/>
+
+  <!-- Bordure décorative -->
+  <rect x="4" y="4" width="392" height="112" rx="13" ry="13" fill="none" stroke="#F4A261" stroke-width="2.5" stroke-dasharray="8,4"/>
+
+  <!-- Éclats décoratifs gauche -->
+  <line x1="30" y1="20" x2="20" y2="10" stroke="#F4A261" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="35" y1="15" x2="35" y2="5" stroke="#A8DADC" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="40" y1="22" x2="52" y2="14" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="22" y1="35" x2="10" y2="38" stroke="#A8DADC" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="20" cy="9" r="3" fill="#F4A261" filter="url(#glow)"/>
+  <circle cx="35" cy="4" r="2.5" fill="#A8DADC" filter="url(#glow)"/>
+  <circle cx="53" cy="13" r="2" fill="#F4A261" filter="url(#glow)"/>
+  <circle cx="9" cy="38" r="2" fill="#A8DADC" filter="url(#glow)"/>
+
+  <!-- Éclats décoratifs droite -->
+  <line x1="370" y1="20" x2="380" y2="10" stroke="#F4A261" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="365" y1="15" x2="365" y2="5" stroke="#A8DADC" stroke-width="2" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="360" y1="22" x2="348" y2="14" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <line x1="378" y1="35" x2="390" y2="38" stroke="#A8DADC" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="380" cy="9" r="3" fill="#F4A261" filter="url(#glow)"/>
+  <circle cx="365" cy="4" r="2.5" fill="#A8DADC" filter="url(#glow)"/>
+  <circle cx="347" cy="13" r="2" fill="#F4A261" filter="url(#glow)"/>
+  <circle cx="391" cy="38" r="2" fill="#A8DADC" filter="url(#glow)"/>
+
+  <!-- Éclats bas gauche -->
+  <line x1="25" y1="85" x2="12" y2="95" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="11" cy="96" r="2.5" fill="#F4A261" filter="url(#glow)"/>
+  <line x1="30" y1="100" x2="18" y2="110" stroke="#A8DADC" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="17" cy="111" r="2" fill="#A8DADC" filter="url(#glow)"/>
+
+  <!-- Éclats bas droite -->
+  <line x1="375" y1="85" x2="388" y2="95" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="389" cy="96" r="2.5" fill="#F4A261" filter="url(#glow)"/>
+  <line x1="370" y1="100" x2="382" y2="110" stroke="#A8DADC" stroke-width="1.5" stroke-linecap="round" filter="url(#glow)"/>
+  <circle cx="383" cy="111" r="2" fill="#A8DADC" filter="url(#glow)"/>
+
+  <!-- Trophée icône -->
+  <g transform="translate(46, 38)" filter="url(#shadow)">
+    <!-- Corps trophée -->
+    <rect x="-10" y="0" width="20" height="16" rx="10" ry="8" fill="#F4A261"/>
+    <rect x="-7" y="8" width="14" height="10" rx="2" fill="#F4A261"/>
+    <!-- Bras trophée -->
+    <path d="M-10,4 Q-18,4 -18,10 Q-18,16 -10,14" fill="none" stroke="#F4A261" stroke-width="3" stroke-linecap="round"/>
+    <path d="M10,4 Q18,4 18,10 Q18,16 10,14" fill="none" stroke="#F4A261" stroke-width="3" stroke-linecap="round"/>
+    <!-- Pied trophée -->
+    <rect x="-8" y="18" width="16" height="3" rx="1.5" fill="#E9C46A"/>
+    <rect x="-12" y="21" width="24" height="4" rx="2" fill="#E9C46A"/>
+    <!-- Étoile sur trophée -->
+    <polygon points="0,-4 1.5,0 5.5,0 2.5,2.5 3.5,6.5 0,4 -3.5,6.5 -2.5,2.5 -5.5,0 -1.5,0" fill="#F1FAEE" transform="translate(0,3)" filter="url(#glow)"/>
+  </g>
+
+  <!-- Texte VICTOIRE ! -->
+  <text x="200" y="52" font-family="Arial Black, Arial, sans-serif" font-size="36" font-weight="900" text-anchor="middle" fill="url(#textGrad)" letter-spacing="4" filter="url(#shadow)">VICTOIRE !</text>
+
+  <!-- Sous-titre -->
+  <text x="200" y="78" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#A8DADC" letter-spacing="2">UN JOUEUR A GAGNÉ LA PARTIE</text>
+
+  <!-- Ligne décorative sous-titre -->
+  <line x1="100" y1="88" x2="300" y2="88" stroke="#F4A261" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <circle cx="100" cy="88" r="3" fill="#F4A261" opacity="0.7"/>
+  <circle cx="300" cy="88" r="3" fill="#F4A261" opacity="0.7"/>
+  <circle cx="200" cy="88" r="3" fill="#A8DADC" opacity="0.9"/>
+
+  <!-- Trophée icône droit -->
+  <g transform="translate(354, 38)" filter="url(#shadow)">
+    <rect x="-10" y="0" width="20" height="16" rx="10" ry="8" fill="#F4A261"/>
+    <rect x="-7" y="8" width="14" height="10" rx="2" fill="#F4A261"/>
+    <path d="M-10,4 Q-18,4 -18,10 Q-18,16 -10,14" fill="none" stroke="#F4A261" stroke-width="3" stroke-linecap="round"/>
+    <path d="M10,4 Q18,4 18,10 Q18,16 10,14" fill="none" stroke="#F4A261" stroke-width="3" stroke-linecap="round"/>
+    <rect x="-8" y="18" width="16" height="3" rx="1.5" fill="#E9C46A"/>
+    <rect x="-12" y="21" width="24" height="4" rx="2" fill="#E9C46A"/>
+    <polygon points="0,-4 1.5,0 5.5,0 2.5,2.5 3.5,6.5 0,4 -3.5,6.5 -2.5,2.5 -5.5,0 -1.5,0" fill="#F1FAEE" transform="translate(0,3)" filter="url(#glow)"/>
+  </g>
+
+  <!-- Bordure externe finale -->
+  <rect x="1" y="1" width="398" height="118" rx="15" ry="15" fill="none" stroke="#A8DADC" stroke-width="1" opacity="0.4"/>
+</svg>

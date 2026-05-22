@@ -203,6 +203,7 @@ def run(state: GameState) -> dict:
         "test_results": _format_test_results(result, retry_n, forced=False),
         "validation_passed": result.passed,
         "validation_errors": result.critical_errors,
+        "fixes_required": result.fixes_required,
         "retry_count": new_retry_count,
         "current_step": "tester_done",
     }

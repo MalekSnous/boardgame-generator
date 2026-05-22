@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Tuile Plaine - Ressource Nourriture</title>
+  <rect width="60" height="60" rx="4" ry="4" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <rect x="2" y="2" width="56" height="56" rx="3" ry="3" fill="#c8e6a0" stroke="none"/>
+  <rect x="2" y="2" width="56" height="56" rx="3" ry="3" fill="none" stroke="#1D3557" stroke-width="1.5"/>
+  <!-- Herbe / plaine : quelques touffes stylisées -->
+  <!-- Touffe gauche -->
+  <line x1="14" y1="38" x2="14" y2="26" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="14" y1="38" x2="9" y2="28" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="14" y1="38" x2="19" y2="28" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Touffe centre -->
+  <line x1="30" y1="40" x2="30" y2="22" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="30" y1="40" x2="24" y2="26" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="30" y1="40" x2="36" y2="26" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Touffe droite -->
+  <line x1="46" y1="38" x2="46" y2="26" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="46" y1="38" x2="41" y2="28" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="46" y1="38" x2="51" y2="28" stroke="#2A9D8F" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Ligne de sol -->
+  <line x1="6" y1="40" x2="54" y2="40" stroke="#1D3557" stroke-width="1.2" stroke-linecap="round"/>
+  <!-- Icône ressource Nourriture : épi de blé simplifié -->
+  <rect x="22" y="46" width="16" height="8" rx="3" ry="3" fill="#F4A261" stroke="#1D3557" stroke-width="1"/>
+  <!-- grain central -->
+  <ellipse cx="30" cy="50" rx="2.5" ry="3.5" fill="#E9C46A" stroke="#1D3557" stroke-width="0.8"/>
+  <!-- grains gauche -->
+  <ellipse cx="25" cy="50" rx="2" ry="3" fill="#E9C46A" stroke="#1D3557" stroke-width="0.7"/>
+  <!-- grains droite -->
+  <ellipse cx="35" cy="50" rx="2" ry="3" fill="#E9C46A" stroke="#1D3557" stroke-width="0.7"/>
+  <!-- Label ressource -->
+  <text x="30" y="58" font-family="sans-serif" font-size="5" font-weight="bold" fill="#1D3557" text-anchor="middle">NOURRITURE</text>
+</svg>

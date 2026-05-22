@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Général - Duel Tactique</title>
+  <circle cx="30" cy="30" r="27" fill="#E63946" stroke="#1D3557" stroke-width="2.5"/>
+  <polygon points="30,8 34,20 47,20 37,28 41,40 30,32 19,40 23,28 13,20 26,20" fill="#E9C46A" stroke="#1D3557" stroke-width="1.5"/>
+  <circle cx="30" cy="30" r="6" fill="#1D3557"/>
+  <circle cx="30" cy="30" r="4" fill="#F4A261"/>
+</svg>

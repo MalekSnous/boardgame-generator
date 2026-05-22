@@ -117,9 +117,12 @@ def run(state: GameState) -> dict:
     llm = ChatAnthropic(model=MODEL, max_tokens=4096)
 
     # Étape 1 : déterminer les fichiers à générer
-    asset_names = _extract_svg_references(state.index_html or "", state.game_js or "")
-    if not asset_names:
-        asset_names = _get_manifest_from_llm(llm, state)
+    # Priorité : manifest du Designer > références dans le code > fallback LLM
+    asset_names = (
+        list(state.asset_manifest)
+        or _extract_svg_references(state.index_html or "", state.game_js or "")
+        or _get_manifest_from_llm(llm, state)
+    )
 
     # Étape 2 : générer chaque SVG individuellement
     filenames: list[str] = []

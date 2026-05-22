@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Tuile Plage — Île Maudite</title>
+  <rect width="60" height="60" rx="4" ry="4" fill="#F1FAEE" stroke="#1D3557" stroke-width="2"/>
+  <rect x="2" y="32" width="56" height="26" rx="3" ry="3" fill="#A8DADC"/>
+  <ellipse cx="30" cy="32" rx="28" ry="8" fill="#E9C46A"/>
+  <rect x="2" y="32" width="56" height="8" fill="#E9C46A"/>
+  <ellipse cx="30" cy="32" rx="28" ry="8" fill="none" stroke="#1D3557" stroke-width="1"/>
+  <path d="M6 38 Q15 34 24 38 Q33 42 42 38 Q51 34 56 38" fill="none" stroke="#457B9D" stroke-width="1.5" opacity="0.7"/>
+  <path d="M6 43 Q15 39 24 43 Q33 47 42 43 Q51 39 56 43" fill="none" stroke="#457B9D" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="30" cy="16" r="8" fill="#F4A261" stroke="#1D3557" stroke-width="1.5"/>
+  <line x1="30" y1="8" x2="30" y2="4" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="30" y1="24" x2="30" y2="28" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="22" y1="16" x2="18" y2="16" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="38" y1="16" x2="42" y2="16" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="24.3" y1="10.3" x2="21.5" y2="7.5" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="35.7" y1="21.7" x2="38.5" y2="24.5" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="35.7" y1="10.3" x2="38.5" y2="7.5" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="24.3" y1="21.7" x2="21.5" y2="24.5" stroke="#1D3557" stroke-width="1.5" stroke-linecap="round"/>
+  <rect x="2" y="2" width="56" height="56" rx="4" ry="4" fill="none" stroke="#1D3557" stroke-width="2"/>
+</svg>

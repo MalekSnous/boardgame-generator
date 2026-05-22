@@ -58,6 +58,13 @@ class GameDesign(BaseModel):
             "(ex: '1 plateau de jeu 8×8', '52 cartes action', '4 pions joueur')"
         )
     )
+    asset_manifest: list[str] = Field(
+        description=(
+            "Liste exacte des fichiers SVG nécessaires pour ce jeu, "
+            "un par composant visuel. Exemples : board.svg, tile_foret.svg, "
+            "piece_player1.svg, card_event.svg. Max 12 fichiers."
+        )
+    )
 
 
 @with_retry()
@@ -108,5 +115,6 @@ def run(state: GameState) -> dict:
         "game_mechanics": json.dumps(mechanics_payload, ensure_ascii=False, indent=2),
         "game_rules": rules_md,
         "components_description": components_md,
+        "asset_manifest": design.asset_manifest,
         "current_step": "designer_done",
     }

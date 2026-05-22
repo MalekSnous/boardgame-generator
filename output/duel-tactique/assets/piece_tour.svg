@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60">
+  <title>Pièce Tour - Duel Tactique</title>
+  <!-- Base de la pièce -->
+  <ellipse cx="30" cy="52" rx="18" ry="5" fill="#1D3557" opacity="0.3"/>
+  <!-- Corps principal -->
+  <rect x="16" y="28" width="28" height="22" rx="2" fill="#457B9D"/>
+  <rect x="16" y="28" width="28" height="22" rx="2" fill="none" stroke="#1D3557" stroke-width="1.5"/>
+  <!-- Créneaux de la tour -->
+  <rect x="15" y="18" width="7" height="12" rx="1" fill="#457B9D" stroke="#1D3557" stroke-width="1.5"/>
+  <rect x="26" y="18" width="8" height="12" rx="1" fill="#457B9D" stroke="#1D3557" stroke-width="1.5"/>
+  <rect x="38" y="18" width="7" height="12" rx="1" fill="#457B9D" stroke="#1D3557" stroke-width="1.5"/>
+  <!-- Bande de connexion des créneaux -->
+  <rect x="15" y="27" width="30" height="4" fill="#457B9D" stroke="#1D3557" stroke-width="1"/>
+  <!-- Fenêtre / meurtrière -->
+  <rect x="25" y="34" width="10" height="8" rx="1" fill="#1D3557" opacity="0.5"/>
+  <!-- Valeur de combat -->
+  <circle cx="30" cy="47" r="6" fill="#F1FAEE" stroke="#1D3557" stroke-width="1"/>
+  <text x="30" y="51" text-anchor="middle" font-family="serif" font-size="9" font-weight="bold" fill="#1D3557">3</text>
+</svg>

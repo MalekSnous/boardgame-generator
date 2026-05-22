@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Île Maudite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ===== ÉCRAN DE DÉMARRAGE ===== -->
+    <div id="start-screen">
+      <div id="start-card">
+        <h1 id="start-title">🏝️ Île Maudite</h1>
+        <p id="start-subtitle">Coopérez pour survivre et construire le radeau avant le tour 20 !</p>
+        <div id="player-select">
+          <label for="player-count-input">Nombre de joueurs :</label>
+          <div id="player-count-buttons">
+            <button class="count-btn active" data-count="2">2</button>
+            <button class="count-btn" data-count="3">3</button>
+            <button class="count-btn" data-count="4">4</button>
+          </div>
+        </div>
+        <button id="start-btn">⛵ Commencer la partie</button>
+        <div id="class-preview">
+          <div class="class-card">
+            <span class="class-emoji">🏹</span>
+            <span class="class-name">Chasseur</span>
+            <span class="class-hp">8 PV</span>
+            <span class="class-ability">Piéger une case adjacente</span>
+          </div>
+          <div class="class-card">
+            <span class="class-emoji">💊</span>
+            <span class="class-name">Soigneur</span>
+            <span class="class-hp">10 PV</span>
+            <span class="class-ability">Soigner 3 PV sans ressource</span>
+          </div>
+          <div class="class-card">
+            <span class="class-emoji">⚙️</span>
+            <span class="class-name">Ingénieur</span>
+            <span class="class-hp">7 PV</span>
+            <span class="class-ability">Réduire 1 ressource requise</span>
+          </div>
+          <div class="class-card">
+            <span class="class-emoji">🔭</span>
+            <span class="class-name">Éclaireur</span>
+            <span class="class-hp">7 PV</span>
+            <span class="class-ability">Révéler sans se déplacer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ÉCRAN DE JEU ===== -->
+    <div id="game-screen" class="hidden">
+
+      <!-- En-tête -->
+      <header id="game-header">
+        <div id="header-left">
+          <span id="game-title-small">🏝️ Île Maudite</span>
+        </div>
+        <div id="header-center">
+          <div id="turn-tracker">
+            <span id="turn-label">Tour</span>
+            <span id="turn-current">1</span>
+            <span id="turn-sep">/</span>
+            <span id="turn-max">20</span>
+          </div>
+          <div id="turn-bar-container">
+            <div id="turn-bar"></div>
+          </div>
+        </div>
+        <div id="header-right">
+          <button id="new-game-btn">🔄 Nouvelle partie</button>
+        </div>
+      </header>
+
+      <!-- Corps principal -->
+      <main id="main-area">
+
+        <!-- Panneau gauche : infos joueurs + inventaire -->
+        <aside id="info-panel">
+
+          <!-- Joueur actif -->
+          <section id="active-player-section">
+            <h2 id="active-player-title">Joueur actif</h2>
+            <div id="active-player-card">
+              <div id="active-player-emoji"></div>
+              <div id="active-player-details">
+                <div id="active-player-name"></div>
+                <div id="active-player-class"></div>
+                <div id="active-player-hp-bar-container">
+                  <div id="active-player-hp-bar"></div>
+                </div>
+                <div id="active-player-hp-text"></div>
+              </div>
+            </div>
+            <div id="active-player-ability">
+              <div id="ability-name"></div>
+              <div id="ability-desc"></div>
+            </div>
+          </section>
+
+          <!-- Phase actuelle -->
+          <section id="phase-section">
+            <div id="phase-indicator">
+              <span id="phase-icon"></span>
+              <span id="phase-text"></span>
+            </div>
+            <div id="phase-hint"></div>
+          </section>
+
+          <!-- Actions disponibles -->
+          <section id="actions-section">
+            <h2>Actions</h2>
+            <div id="action-buttons">
+              <button id="btn-collect" class="action-btn" title="Collecter la ressource de la case actuelle">
+                🎒 Collecter
+              </button>
+              <button id="btn-heal" class="action-btn" title="Dépenser 1 Nourriture pour soigner 2 PV">
+                🩹 Soigner
+              </button>
+              <button id="btn-build" class="action-btn" title="Construire le radeau (tous sur la Plage)">
+                🛶 Construire
+              </button>
+              <button id="btn-ability" class="action-btn ability-btn" title="Utiliser votre capacité spéciale">
+                ✨ Capacité
+              </button>
+            </div>
+
+            <!-- Passer l'action -->
+            <button id="btn-pass" class="action-btn pass-btn hidden">⏭️ Passer l'action</button>
+
+            <!-- Sous-menu soigner : choisir cible -->
+            <div id="heal-target-menu" class="hidden">
+              <div id="heal-target-label">Choisir la cible :</div>
+              <div id="heal-target-list"></div>
+              <button id="heal-cancel-btn" class="cancel-btn">Annuler</button>
+            </div>
+
+            <!-- Sous-menu Ingénieur : choisir ressource -->
+            <div id="engineer-pick-menu" class="hidden">
+              <div id="engineer-pick-label">Réduire quelle ressource ?</div>
+              <div id="engineer-pick-buttons">
+                <button class="eng-pick-btn" data-resource="food">🍖 Nourriture</button>
+                <button class="eng-pick-btn" data-resource="wood">🪵 Bois</button>
+                <button class="eng-pick-btn" data-resource="metal">⚙️ Métal</button>
+              </div>
+              <button id="engineer-cancel-btn" class="cancel-btn">Annuler</button>
+            </div>
+
+            <!-- Bouton piocher événement -->
+            <button id="btn-draw-event" class="action-btn event-btn hidden">
+              📋 Piocher Événement
+            </button>
+          </section>
+
+          <!-- Inventaire commun -->
+          <section id="inventory-section">
+            <h2>Inventaire commun <span id="inventory-count">(0/8)</span></h2>
+            <div id="inventory-grid">
+              <div class="inv-slot" id="inv-food">
+                <span class="inv-icon">🍖</span>
+                <span class="inv-label">Nourriture</span>
+                <span class="inv-value" id="inv-food-val">0</span>
+                <span class="inv-needed" id="inv-food-needed">/3</span>
+              </div>
+              <div class="inv-slot" id="inv-wood">
+                <span class="inv-icon">🪵</span>
+                <span class="inv-label">Bois</span>
+                <span class="inv-value" id="inv-wood-val">0</span>
+                <span class="inv-needed" id="inv-wood-needed">/3</span>
+              </div>
+              <div class="inv-slot" id="inv-metal">
+                <span class="inv-icon">⚙️</span>
+                <span class="inv-label">Métal</span>
+                <span class="inv-value" id="inv-metal-val">0</span>
+                <span class="inv-needed" id="inv-metal-needed">/3</span>
+              </div>
+            </div>
+            <div id="inventory-slots">
+              <!-- 8 emplacements visuels -->
+              <div class="inv-visual-slot" id="inv-vis-0"></div>
+              <div class="inv-visual-slot" id="inv-vis-1"></div>
+              <div class="inv-visual-slot" id="inv-vis-2"></div>
+              <div class="inv-visual-slot" id="inv-vis-3"></div>
+              <div class="inv-visual-slot" id="inv-vis-4"></div>
+              <div class="inv-visual-slot" id="inv-vis-5"></div>
+              <div class="inv-visual-slot" id="inv-vis-6"></div>
+              <div class="inv-visual-slot" id="inv-vis-7"></div>
+            </div>
+            <div id="engineer-discount-badge" class="hidden">
+              ⚙️ Réduction : <span id="engineer-discount-resource"></span>
+            </div>
+          </section>
+
+          <!-- Tous les joueurs -->
+          <section id="all-players-section">
+            <h2>Explorateurs</h2>
+            <div id="all-players-list">
+              <!-- Généré dynamiquement -->
+            </div>
+          </section>
+
+          <!-- Dernier événement -->
+          <section id="last-event-section">
+            <h2>Dernier événement</h2>
+            <div id="last-event-display">
+              <span id="last-event-emoji">—</span>
+              <span id="last-event-name">Aucun</span>
+            </div>
+            <div id="last-event-desc"></div>
+          </section>
+
+        </aside>
+
+        <!-- Plateau de jeu -->
+        <div id="board-area">
+          <div id="game-board">
+            <!-- 49 cases générées dynamiquement par game.js -->
+          </div>
+          <div id="board-legend">
+            <span class="legend-item"><span>🏖️</span> Plage</span>
+            <span class="legend-item"><span>🌲</span> Forêt (Bois)</span>
+            <span class="legend-item"><span>🌾</span> Plaine (Nourriture)</span>
+            <span class="legend-item"><span>🏚️</span> Ruine (Métal)</span>
+            <span class="legend-item"><span>🌿</span> Marais (-1 PV)</span>
+            <span class="legend-item"><span>🌋</span> Volcan (interdit)</span>
+            <span class="legend-item"><span>❓</span> Brouillard</span>
+          </div>
+        </div>
+
+        <!-- Journal -->
+        <aside id="log-panel">
+          <h2 id="log-title">📜 Journal</h2>
+          <div id="log-list">
+            <!-- Entrées générées dynamiquement -->
+          </div>
+        </aside>
+
+      </main>
+
+      <!-- Message contextuel (mode abilité, etc.) -->
+      <div id="context-message" class="hidden">
+        <span id="context-message-text"></span>
+        <button id="context-cancel-btn" class="cancel-btn">Annuler</button>
+      </div>
+
+    </div>
+
+    <!-- ===== ÉCRAN DE FIN DE PARTIE ===== -->
+    <div id="game-over-screen" class="hidden">
+      <div id="game-over-card">
+        <div id="game-over-icon"></div>
+        <h2 id="game-over-title"></h2>
+        <p id="game-over-reason"></p>
+        <div id="game-over-stats">
+          <div class="stat-item">
+            <span class="stat-label">Tours joués</span>
+            <span class="stat-value" id="stat-turns"></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🍖 Nourriture</span>
+            <span class="stat-value" id="stat-food"></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">🪵 Bois</span>
+            <span class="stat-value" id="stat-wood"></span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">⚙️ Métal</span>
+            <span class="stat-value" id="stat-metal"></span>
+          </div>
+        </div>
+        <div id="game-over-players">
+          <!-- Résumé PV joueurs -->
+        </div>
+        <button id="game-over-new-btn">🔄 Nouvelle partie</button>
+      </div>
+    </div>
+
+  </div><!-- #app -->
+
+  <script src="game.js"></script>
+</body>
+</html>

@@ -373,7 +373,6 @@
           slot.classList.add('blocked-slot');
         } else {
           slot.classList.remove('blocked-slot');
-          die.querySelector('.die-value').textContent = val > 0 ? val : '?';
 
           if (phase === 'reroll') {
             die.classList.add('selectable');
@@ -398,9 +397,22 @@
         `Dés de ${cp.emoji} ${cp.name}`;
     }
 
+    const DIE_FACE_ASSETS = {
+      1: 'assets/die_red_face1.svg',
+      2: 'assets/die_red_face2.svg',
+      3: 'assets/die_red_face3.svg',
+      4: 'assets/die_red_face4.svg',
+      5: 'assets/die_red_face5.svg',
+      6: 'assets/die_red_face6.svg',
+    };
+
     function renderDieFace(dieEl, value) {
       const valEl = dieEl.querySelector('.die-value');
-      valEl.textContent = value > 0 ? value : (dieEl.classList.contains('blocked') ? '🔒' : '?');
+      if (value > 0 && DIE_FACE_ASSETS[value]) {
+        valEl.innerHTML = `<img src="${DIE_FACE_ASSETS[value]}" class="die-face-img" alt="${value}">`;
+      } else {
+        valEl.textContent = dieEl.classList.contains('blocked') ? '🔒' : '?';
+      }
     }
 
     function renderOfferedDice() {
@@ -430,7 +442,10 @@
         if (gameState.selectedOfferedDice.includes(i)) {
           die.classList.add('selected-offered');
         }
-        die.innerHTML = `<span class="die-value">${offer.value}</span>`;
+        const faceAsset = DIE_FACE_ASSETS[offer.value];
+        die.innerHTML = faceAsset
+          ? `<img src="${faceAsset}" class="die-face-img" alt="${offer.value}">`
+          : `<span class="die-value">${offer.value}</span>`;
         die.title = `Dé de ${p.name}`;
         die.onclick = () => { toggleOfferedDie(i); renderAll(); };
 
@@ -500,9 +515,17 @@
         div.className = `player-card player-color-${p.color}`;
         if (i === gameState.currentPlayerIndex) div.classList.add('active-player-card');
 
+        const PLAYER_BOARD_ASSETS = {
+          red: 'assets/board_player_red.svg',
+          blue: 'assets/board_player_blue.svg',
+          green: 'assets/board_player_green.svg',
+          yellow: 'assets/board_player_yellow.svg',
+        };
+        const boardAsset = PLAYER_BOARD_ASSETS[p.color] || '';
         const header = document.createElement('div');
         header.className = 'player-card-header';
-        header.innerHTML = `<span class="player-card-emoji">${p.emoji}</span>
+        header.innerHTML = `${boardAsset ? `<img src="${boardAsset}" class="player-board-icon" alt="${p.color}">` : ''}
+                            <span class="player-card-emoji">${p.emoji}</span>
                             <span class="player-card-name">${p.name}</span>
                             ${i === gameState.currentPlayerIndex ? '<span class="player-turn-badge">Tour</span>' : ''}`;
 
