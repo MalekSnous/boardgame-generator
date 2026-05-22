@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dés du Destin — Règles</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+      color: #1a1a2e;
+      background: #f8f7f2;
+      line-height: 1.7;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .8; }
+    .btn-back { background: #e8e6df; color: #1a1a2e; }
+    .btn-play { background: #1d3557; color: white; }
+    h1 { font-size: 2.2rem; margin-bottom: 8px; color: #1d3557; }
+    .subtitle { font-style: italic; color: #666; margin-bottom: 40px; font-size: 1.05rem; }
+    h2 { font-size: 1.3rem; margin: 36px 0 12px; color: #1d3557; border-bottom: 2px solid #e8e6df; padding-bottom: 6px; }
+    h3 { margin: 20px 0 8px; color: #333; }
+    p { margin-bottom: 14px; }
+    ul, ol { margin: 0 0 14px 24px; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.95rem; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #1d3557; color: white; }
+    tr:nth-child(even) { background: #f0ede6; }
+    blockquote { border-left: 4px solid #1d3557; padding: 8px 16px; margin: 16px 0; background: #eef2f7; border-radius: 0 6px 6px 0; font-style: italic; }
+    hr { border: none; border-top: 1px solid #e8e6df; margin: 24px 0; }
+    .play-banner { text-align: center; margin: 48px 0 16px; padding: 32px; background: #1d3557; border-radius: 12px; }
+    .play-banner p { color: #a8dadc; margin-bottom: 16px; font-family: sans-serif; }
+    .btn-play-large { display: inline-block; padding: 14px 40px; background: #e63946; color: white; border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: 700; font-family: sans-serif; }
+    .btn-play-large:hover { background: #c1121f; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../../index.html" class="btn btn-back">← Tous les jeux</a>
+    <a href="index.html" class="btn btn-play">▶ Jouer maintenant</a>
+  </nav>
+
+  <h1>🎲 Dés du Destin</h1>
+  <p class="subtitle">Un jeu coopératif pour 2 à 4 joueurs — Durée : 30 à 45 minutes</p>
+
+  <p>Le monde tremble. Des catastrophes s'enchaînent, et seule une équipe soudée peut les repousser. Combinez vos dés, partagez vos ressources et agissez vite — la jauge de crise ne pardonne pas !</p>
+
+  <hr>
+
+  <h2>Ce qu'il y a dans la boîte</h2>
+  <ul>
+    <li>1 plateau partagé avec une jauge de crise graduée de <strong>0 à 10</strong></li>
+    <li><strong>12 dés personnalisés</strong> à 6 faces (3 par joueur : rouge, bleu, vert, jaune)</li>
+    <li><strong>15 tuiles Menace</strong> (à piocher dans le sac en tissu)</li>
+    <li><strong>20 cartes Bouclier</strong> (annuler une crise, rejouer un dé, copier un dé allié, bloquer une Catastrophe)</li>
+    <li>1 pion curseur pour la jauge de crise</li>
+    <li>4 plateaux joueur individuels avec rappel des combinaisons</li>
+    <li>1 fiche de règles récapitulative</li>
+  </ul>
+
+  <hr>
+
+  <h2>Mise en place</h2>
+  <p>Placez le plateau au centre de la table et positionnez le curseur sur <strong>0</strong>. Mélangez les tuiles Menace dans le sac et posez-le à portée de tous. Distribuez à chaque joueur ses 3 dés de couleur et son plateau individuel. Formez une pioche avec les cartes Bouclier, face cachée.</p>
+
+  <hr>
+
+  <h2>Déroulement d'un tour</h2>
+  <p>Chaque joueur joue à son tour, dans le sens des aiguilles d'une montre :</p>
+  <ol>
+    <li><strong>Révéler une tuile Menace</strong> depuis le sac et appliquer immédiatement son effet (hausse de la jauge, dé bloqué, ressource retirée…).</li>
+    <li><strong>Lancer tes 3 dés</strong>. Tu peux ensuite relancer une seule fois les dés de ton choix.</li>
+    <li><strong>Annoncer tes résultats</strong> à voix haute. Tes coéquipiers peuvent t'offrir un dé mis en réserve lors de leur propre tour pour t'aider à former une combinaison.</li>
+    <li><strong>Déclarer ta combinaison</strong> parmi celles-ci :
+      <table>
+        <thead><tr><th>Combinaison</th><th>Effet</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Paire</strong> (2 valeurs identiques)</td><td>Jauge de crise − 1</td></tr>
+          <tr><td><strong>Suite</strong> (3 valeurs consécutives)</td><td>Tuile Menace neutralisée</td></tr>
+          <tr><td><strong>Brelan</strong> (3 valeurs identiques)</td><td>Tuile neutralisée + jauge − 2</td></tr>
+          <tr><td><strong>Full</strong> (paire + brelan)</td><td>Jauge − 3 + piocher 1 carte Bouclier</td></tr>
+        </tbody>
+      </table>
+    </li>
+    <li><strong>Appliquer les effets</strong> sur le plateau partagé : déplacer le curseur, défausser la tuile, piocher une carte Bouclier si applicable.</li>
+    <li><strong>Passer la main</strong>. Si aucune combinaison n'est formée, la jauge monte de <strong>1</strong>.</li>
+  </ol>
+
+  <hr>
+
+  <h2>Conditions de victoire</h2>
+  <p>🏆 <strong>Victoire collective</strong> : toutes les 15 tuiles Menace sont neutralisées avant que la jauge atteigne 10.</p>
+  <p>💀 <strong>Défaite immédiate</strong> : la jauge atteint 10 — ou une tuile marquée ☠ déclenche une Catastrophe alors qu'il ne reste aucune carte Bouclier.</p>
+
+  <hr>
+
+  <h2>Conseils pour survivre ensemble</h2>
+  <ul>
+    <li><strong>Gardez un dé en réserve</strong> quand vous le pouvez : un dé offert au bon moment peut faire toute la différence.</li>
+    <li><strong>Parlez-vous !</strong> Annoncez vos résultats tôt pour que l'équipe anticipe les combinaisons possibles.</li>
+    <li><strong>Dosez vos cartes Bouclier</strong> : gardez-en au moins une pour les tuiles ☠, elles arrivent toujours au pire moment.</li>
+    <li><strong>Visez le Full</strong> dès que l'occasion se présente : c'est la combinaison la plus puissante du jeu.</li>
+  </ul>
+
+  <div class="play-banner">
+    <p>Prêt à jouer ? Le jeu tourne entièrement dans le navigateur.</p>
+    <a href="index.html" class="btn-play-large">🎲 Lancer la partie</a>
+  </div>
+</body>
+</html>

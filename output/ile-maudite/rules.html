@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Île Maudite — Règles</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+      color: #1a1a2e;
+      background: #f8f7f2;
+      line-height: 1.7;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .8; }
+    .btn-back { background: #e8e6df; color: #1a1a2e; }
+    .btn-play { background: #1d3557; color: white; }
+    h1 { font-size: 2.2rem; margin-bottom: 8px; color: #1d3557; }
+    .subtitle { font-style: italic; color: #666; margin-bottom: 40px; font-size: 1.05rem; }
+    h2 { font-size: 1.3rem; margin: 36px 0 12px; color: #1d3557; border-bottom: 2px solid #e8e6df; padding-bottom: 6px; }
+    h3 { margin: 20px 0 8px; color: #333; }
+    p { margin-bottom: 14px; }
+    ul, ol { margin: 0 0 14px 24px; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.95rem; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #1d3557; color: white; }
+    tr:nth-child(even) { background: #f0ede6; }
+    blockquote { border-left: 4px solid #1d3557; padding: 8px 16px; margin: 16px 0; background: #eef2f7; border-radius: 0 6px 6px 0; font-style: italic; }
+    hr { border: none; border-top: 1px solid #e8e6df; margin: 24px 0; }
+    .play-banner { text-align: center; margin: 48px 0 16px; padding: 32px; background: #1d3557; border-radius: 12px; }
+    .play-banner p { color: #a8dadc; margin-bottom: 16px; font-family: sans-serif; }
+    .btn-play-large { display: inline-block; padding: 14px 40px; background: #e63946; color: white; border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: 700; font-family: sans-serif; }
+    .btn-play-large:hover { background: #c1121f; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../../index.html" class="btn btn-back">← Tous les jeux</a>
+    <a href="index.html" class="btn btn-play">▶ Jouer maintenant</a>
+  </nav>
+
+  <h1>🏝️ Île Maudite</h1>
+  <p class="subtitle">Jeu de survie coopératif pour 2 à 4 joueurs — Durée : 30 à 45 minutes</p>
+
+  <p>Naufragés sur une île hostile, les explorateurs doivent unir leurs forces pour survivre, rassembler des ressources et construire un radeau avant qu'il ne soit trop tard. Coopération, exploration et sang-froid seront vos meilleurs alliés. Vous avez <strong>20 tours</strong>. Pas un de plus.</p>
+
+  <hr>
+
+  <h2>Composants</h2>
+  <ul>
+    <li>1 plateau de jeu (grille 7×7)</li>
+    <li>36 tuiles de terrain (face cachée au départ)</li>
+    <li>40 cartes Événement</li>
+    <li>4 pions joueur (rouge, bleu, vert, jaune)</li>
+    <li>4 fiches de classe double face</li>
+    <li>1 piste de compteur de tours (1–20)</li>
+    <li>30 jetons ressource : Nourriture (marron), Bois (vert), Métal (gris)</li>
+    <li>8 marqueurs de case bloquée</li>
+    <li>4 cartes de référence</li>
+  </ul>
+
+  <hr>
+
+  <h2>Mise en place</h2>
+  <ol>
+    <li>Placez le plateau au centre de la table.</li>
+    <li>Disposez les 36 tuiles de terrain <strong>face cachée</strong> sur toutes les cases, sauf la <strong>case Plage</strong> (centre bas), toujours visible — c'est votre point de départ.</li>
+    <li>Placez tous les pions sur la case Plage.</li>
+    <li>Chaque joueur choisit une classe et prend la fiche correspondante : <strong>Chasseur</strong> (8 PV), <strong>Soigneur</strong> (10 PV), <strong>Ingénieur</strong> (7 PV) ou <strong>Éclaireur</strong> (7 PV). Réglez les curseurs de PV au maximum.</li>
+    <li>Mélangez les cartes Événement et posez-les en pioche face cachée.</li>
+    <li>Placez le marqueur de tours sur la case <strong>1</strong>. L'inventaire commun est vide — il peut accueillir jusqu'à 8 ressources.</li>
+    <li>Le joueur le plus récemment naufragé commence 🙂</li>
+  </ol>
+
+  <hr>
+
+  <h2>Déroulement d'un tour</h2>
+  <p>À son tour, le <strong>joueur actif</strong> effectue ces quatre étapes dans l'ordre :</p>
+
+  <h3>1. Se déplacer</h3>
+  <p>Bougez votre pion d'exactement une case (haut, bas, gauche ou droite). Si la case est encore dans le brouillard, retournez la tuile et appliquez immédiatement son effet : gain d'une ressource, piège (−1 PV pour les Marais), ou rien de particulier. Le Volcan est <strong>interdit</strong> d'accès en permanence.</p>
+
+  <h3>2. Agir</h3>
+  <p>Choisissez <strong>une seule</strong> des actions suivantes :</p>
+  <ul>
+    <li><strong>(a) Collecter</strong> — Si votre case contient une ressource et que l'inventaire a moins de 8 jetons, ajoutez 1 ressource du type indiqué.</li>
+    <li><strong>(b) Soigner</strong> — Dépensez 1 Nourriture de l'inventaire pour rendre 2 PV à vous-même ou à un joueur sur la même case.</li>
+    <li><strong>(c) Construire</strong> — Uniquement si <strong>tous</strong> les joueurs sont sur la case Plage et que l'inventaire contient au moins 3 Nourriture, 3 Bois et 3 Métal : déclenchez la victoire !</li>
+    <li><strong>(d) Capacité spéciale</strong> — Activez le pouvoir unique de votre classe (une seule fois par tour).</li>
+  </ul>
+
+  <h3>3. Piocher un événement</h3>
+  <p>Le joueur actif retourne la carte du dessus et applique son effet :</p>
+  <table>
+    <thead><tr><th>Carte</th><th>Effet</th></tr></thead>
+    <tbody>
+      <tr><td>🌩️ Tempête</td><td>2 cases adjacentes sont bloquées pendant 1 tour</td></tr>
+      <tr><td>🐾 Attaque de Bête</td><td>Chaque joueur en Forêt perd 2 PV</td></tr>
+      <tr><td>💀 Malédiction</td><td>Retirez 1 ressource de l'inventaire commun</td></tr>
+      <tr><td>☀️ Accalmie</td><td>Aucun effet négatif ; les cases bloquées sont libérées</td></tr>
+    </tbody>
+  </table>
+
+  <h3>4. Fin de tour</h3>
+  <p>Avancez le compteur d'un cran. Vérifiez les PV de tous les joueurs. Passez la main au joueur suivant dans le sens horaire.</p>
+
+  <hr>
+
+  <h2>Classes et capacités spéciales</h2>
+  <table>
+    <thead><tr><th>Classe</th><th>PV max</th><th>Capacité</th></tr></thead>
+    <tbody>
+      <tr><td>🏹 Chasseur</td><td>8</td><td><strong>Piéger</strong> — posez un piège sur une case adjacente ; la prochaine Attaque de Bête y est annulée</td></tr>
+      <tr><td>💊 Soigneur</td><td>10</td><td><strong>Herbes médicinales</strong> — soignez 3 PV à un joueur sur votre case, sans dépenser de Nourriture</td></tr>
+      <tr><td>⚙️ Ingénieur</td><td>7</td><td><strong>Optimisation</strong> — la prochaine construction coûte 1 ressource de moins (catégorie au choix), une fois par partie</td></tr>
+      <tr><td>🔭 Éclaireur</td><td>7</td><td><strong>Exploration rapide</strong> — révélez 2 tuiles adjacentes au lieu d'une lors de votre déplacement, sans vous y rendre</td></tr>
+    </tbody>
+  </table>
+
+  <hr>
+
+  <h2>Conditions de victoire</h2>
+  <p><strong>Victoire collective 🎉</strong> — Tous les joueurs se trouvent simultanément sur la case Plage, et l'inventaire contient au moins <strong>3 Nourriture + 3 Bois + 3 Métal</strong>. Le joueur actif exécute alors l'action Construire : le radeau prend la mer !</p>
+  <p><strong>Défaite immédiate 💀</strong> — Elle survient dès que :</p>
+  <ul>
+    <li>le compteur atteint le tour <strong>20</strong>, ou</li>
+    <li>les PV d'un joueur tombent à <strong>0 ou moins</strong>.</li>
+  </ul>
+
+  <hr>
+
+  <h2>Conseils pour survivre</h2>
+  <ul>
+    <li><strong>Communiquez en permanence</strong> : l'inventaire est partagé, chaque collecte et chaque soin doit être concerté.</li>
+    <li><strong>Répartissez-vous sur la carte</strong> : explorer ensemble est moins rentable que couvrir des zones différentes.</li>
+    <li><strong>Gardez une Nourriture de réserve</strong> pour soigner en urgence après une Attaque de Bête.</li>
+    <li><strong>Ralliez la Plage ensemble</strong> : inutile d'y retourner seul, la construction nécessite tout le groupe.</li>
+    <li><strong>L'Éclaireur ouvre la voie</strong> ; l'Ingénieur devrait être le dernier à revenir pour optimiser la construction finale.</li>
+  </ul>
+
+  <div class="play-banner">
+    <p>Prêt à jouer ? Le jeu tourne entièrement dans le navigateur.</p>
+    <a href="index.html" class="btn-play-large">🏝️ Lancer la partie</a>
+  </div>
+</body>
+</html>

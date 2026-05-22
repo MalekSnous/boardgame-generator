@@ -1,104 +1,115 @@
-# Boardgame Generator
+# 🎲 Board Game Generator
 
 [![CI](https://github.com/MalekSnous/boardgame-generator/actions/workflows/ci.yml/badge.svg)](https://github.com/MalekSnous/boardgame-generator/actions/workflows/ci.yml)
 [![Deploy](https://github.com/MalekSnous/boardgame-generator/actions/workflows/deploy.yml/badge.svg)](https://github.com/MalekSnous/boardgame-generator/actions/workflows/deploy.yml)
 
-Pipeline multi-agent pour générer des jeux de société jouables dans le navigateur, piloté par Claude via LangGraph.
+> Pipeline multi-agent LangGraph + Claude Sonnet qui génère
+> des jeux de société jouables dans le navigateur
+> à partir d'un simple prompt texte.
 
-## Architecture
+**🔗 [Voir les jeux en ligne](https://maleksnous.github.io/boardgame-generator/)**
+
+---
+
+## Jeux générés
+
+| Jeu | Type | Joueurs | Pipeline | Lien |
+|---|---|---|---|---|
+| 🎲 Dés du Destin | Coopératif / Dés | 2–4 | v1 — 5 corrections manuelles | [Jouer](https://maleksnous.github.io/boardgame-generator/output/des-du-destin/) · [Règles](https://maleksnous.github.io/boardgame-generator/output/des-du-destin/rules.html) |
+| ⚔️ Duel Tactique | Stratégie | 2 | v2 — 0 correction manuelle | [Jouer](https://maleksnous.github.io/boardgame-generator/output/duel-tactique/) · [Règles](https://maleksnous.github.io/boardgame-generator/output/duel-tactique/rules.html) |
+| 🏝️ Île Maudite | Survie / Exploration | 2–4 | v2 — jeu complexe | [Jouer](https://maleksnous.github.io/boardgame-generator/output/ile-maudite/) · [Règles](https://maleksnous.github.io/boardgame-generator/output/ile-maudite/rules.html) |
+
+---
+
+## Architecture du pipeline
 
 ```
-concept de jeu (texte)
+[Prompt utilisateur]
         │
         ▼
-┌──────────────────────────────────────────────────┐
-│                  Orchestrateur                    │
-│                  (LangGraph)                      │
-│                                                   │
-│  ┌──────────┐   ┌───────────┐   ┌─────────────┐  │
-│  │ Designer │──▶│Développeur│──▶│Asset SVG Gen│  │
-│  └──────────┘   └───────────┘   └──────┬──────┘  │
-│                                        │          │
-│                 ┌──────────────────────┘          │
-│                 ▼                                 │
-│          ┌──────────┐   ┌────────────────┐        │
-│          │  Testeur │──▶│ Documentaliste │        │
-│          └──────────┘   └────────────────┘        │
-└──────────────────────────────────────────────────┘
-        │
-        ▼
-   output/<nom_du_jeu>/
-   ├── index.html
-   ├── style.css
-   ├── game.js
-   ├── assets/
-   │   ├── piece_1.svg
-   │   └── ...
-   ├── rules.md
-   └── README.md
+┌──────────────┐
+│ Orchestrateur│  LangGraph StateGraph — gère l'état partagé
+│  LangGraph   │  et route entre les agents
+└──────┬───────┘
+       │
+┌──────▼───────┐   ┌───────────┐   ┌────────────────┐
+│   Designer   │──▶│ Developer │──▶│ Asset Generator│
+│              │   │           │   │                │
+│ Règles       │   │ game.js   │   │ SVG plateau,   │
+│ Mécaniques   │   │ index.html│   │ pions, cartes  │
+│ Composants   │   │ style.css │   └───────┬────────┘
+└──────────────┘   └───────────┘           │
+                                           ▼
+                               ┌─────────────────┐
+                               │     Tester      │◀─┐
+                               │                 │  │ retry si
+                               │ Checklist       │──┘ bugs détectés
+                               │ syntaxe+logique │   (max 3×)
+                               └──────┬──────────┘
+                                      │
+                                      ▼
+                               ┌──────────────┐
+                               │ Documentalist│
+                               │              │
+                               │ rules.md     │
+                               │ README.md    │
+                               └──────┬───────┘
+                                      │
+                                      ▼
+                          📦 output/{game_name}/
+                          ├── index.html
+                          ├── style.css
+                          ├── game.js
+                          ├── rules.md
+                          ├── rules.html
+                          ├── README.md
+                          └── assets/*.svg
 ```
 
-### Agents
+---
 
-| Agent | Rôle |
+## Robustesse du pipeline
+
+| Amélioration | Description |
 |---|---|
-| **Designer** | Conçoit les règles, la mécanique et les composants du jeu |
-| **Développeur** | Génère le code HTML/CSS/JS pour jouer dans le navigateur |
-| **Asset Generator** | Crée les assets visuels (pièces, plateau, cartes) en SVG |
-| **Testeur** | Vérifie la cohérence des règles et la jouabilité du code |
-| **Documentaliste** | Rédige `rules.md` et `README.md` |
+| Découpage game.js en 3 parties | Évite la troncature sur les jeux complexes |
+| Retry ciblé Tester→Developer | Corrections chirurgicales, pas de régénération |
+| Validation syntaxique JS | `node --check` après chaque génération |
+| Nettoyage backticks Markdown | Suppression automatique des fences |
+| Retry API avec backoff | Resilience aux erreurs réseau |
+| Logging JSON structuré | Traçabilité complète de chaque run |
+| Fallback SVG | Placeholder si un asset échoue |
 
-### État partagé : `GameState`
+---
 
-Chaque agent lit et enrichit un objet `GameState` JSON transmis de nœud en nœud dans le graph LangGraph.
-
-## Installation
+## Lancer le pipeline
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+# Installation
+git clone https://github.com/MalekSnous/boardgame-generator
+cd boardgame-generator
+python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
-```
 
-Copier `.env.example` en `.env` et renseigner votre clé API :
-
-```bash
+# Configuration
 cp .env.example .env
-# éditer .env et ajouter ANTHROPIC_API_KEY=...
+# Ajouter ANTHROPIC_API_KEY dans .env
+
+# Générer un jeu
+python -m src.orchestrator "votre concept de jeu ici"
+# Le jeu est créé dans output/{nom_du_jeu}/
 ```
 
-## Utilisation
+---
 
-```bash
-python -m src.orchestrator "Jeu de plateau coopératif sur l'exploration spatiale, 2-4 joueurs"
-```
+## Stack
 
-Le jeu généré est disponible dans `output/<nom_du_jeu>/index.html`.
-
-## Stack technique
-
-- **LLM** : Claude (Anthropic) via `langchain-anthropic`
-- **Orchestration** : LangGraph (StateGraph)
-- **Validation** : Pydantic v2
-- **Output** : HTML5 + CSS3 + JavaScript vanilla (zero dépendance npm)
-
-## Structure du projet
-
-```
-boardgame-generator/
-├── src/
-│   ├── __init__.py
-│   ├── orchestrator.py       ← graph LangGraph + GameState
-│   └── agents/
-│       ├── __init__.py
-│       ├── designer.py
-│       ├── developer.py
-│       ├── asset_generator.py
-│       ├── tester.py
-│       └── documentalist.py
-├── output/                   ← jeux générés (gitignored)
-├── tests/
-├── requirements.txt
-├── .env.example
-└── README.md
-```
+| Couche | Technologie |
+|---|---|
+| Orchestration agents | LangGraph |
+| LLM | Claude Sonnet (Anthropic) |
+| Langage pipeline | Python 3.12 |
+| Runtime jeux | HTML5 / CSS3 / JavaScript vanilla |
+| Assets | SVG généré programmatiquement |
+| CI/CD | GitHub Actions |
+| Déploiement | GitHub Pages |

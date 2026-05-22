@@ -2,39 +2,336 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Board Game Generator — Portfolio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Board Game Generator — Portfolio IA</title>
   <style>
-    body { font-family: sans-serif; max-width: 700px; 
-           margin: 60px auto; padding: 0 20px; }
-    h1 { font-size: 2rem; }
-    .game-card { border: 1px solid #ddd; border-radius: 8px;
-                 padding: 20px; margin: 20px 0; }
-    a.play-btn { display: inline-block; background: #1D3557;
-                 color: white; padding: 10px 20px; border-radius: 6px;
-                 text-decoration: none; margin-top: 10px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0d1b2a;
+      color: #e0e0e0;
+      min-height: 100vh;
+    }
+    header {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(180deg, #1d3557 0%, #0d1b2a 100%);
+    }
+    header h1 {
+      font-size: 2.4rem;
+      color: #a8dadc;
+      margin-bottom: 12px;
+    }
+    header p {
+      color: #888;
+      font-size: 1.05rem;
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+    .badges { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+    .badge {
+      background: #1d3557;
+      color: #a8dadc;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 48px 20px;
+    }
+    .section-title {
+      font-size: 1.4rem;
+      color: #a8dadc;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #1d3557;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 64px;
+    }
+    .game-card {
+      background: #1a2a3a;
+      border: 1px solid #1d3557;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform .2s, border-color .2s;
+    }
+    .game-card:hover {
+      transform: translateY(-4px);
+      border-color: #a8dadc;
+    }
+    .card-header {
+      padding: 24px 24px 16px;
+      background: #1d3557;
+    }
+    .card-emoji { font-size: 2rem; margin-bottom: 8px; }
+    .card-title {
+      font-size: 1.3rem;
+      color: #a8dadc;
+      margin-bottom: 4px;
+    }
+    .card-meta {
+      font-size: 0.8rem;
+      color: #888;
+    }
+    .card-body { padding: 16px 24px 24px; }
+    .card-desc {
+      color: #aaa;
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .tag {
+      background: #0d1b2a;
+      color: #a8dadc;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+    }
+    .card-actions { display: flex; gap: 10px; }
+    .btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      text-decoration: none;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .8; }
+    .btn-play { background: #e63946; color: white; }
+    .btn-rules { background: #1d3557; color: #a8dadc; }
+    .pipeline-section {
+      background: #1a2a3a;
+      border: 1px solid #1d3557;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 48px;
+    }
+    .pipeline-section h2 {
+      color: #a8dadc;
+      margin-bottom: 20px;
+    }
+    .pipeline-flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .agent {
+      background: #0d1b2a;
+      border: 1px solid #1d3557;
+      border-radius: 8px;
+      padding: 10px 16px;
+      text-align: center;
+    }
+    .agent-name { color: #a8dadc; font-weight: 600; font-size: 0.9rem; }
+    .agent-role { color: #666; font-size: 0.75rem; margin-top: 2px; }
+    .arrow { color: #1d3557; font-size: 1.2rem; }
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+    }
+    .stack-item {
+      background: #0d1b2a;
+      border: 1px solid #1d3557;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stack-item strong { color: #a8dadc; display: block; font-size: 0.9rem; }
+    .stack-item span { color: #666; font-size: 0.8rem; }
+    footer {
+      text-align: center;
+      padding: 32px;
+      color: #444;
+      font-size: 0.85rem;
+      border-top: 1px solid #1d3557;
+    }
+    footer a { color: #a8dadc; text-decoration: none; }
   </style>
 </head>
 <body>
+
+<header>
   <h1>🎲 Board Game Generator</h1>
-  <p>Pipeline multi-agent LangGraph + Claude Sonnet — 
+  <p>Pipeline multi-agent LangGraph + Claude Sonnet —
      chaque jeu généré automatiquement à partir d'un prompt.</p>
+  <div class="badges">
+    <span class="badge">LangGraph</span>
+    <span class="badge">Claude Sonnet</span>
+    <span class="badge">5 agents IA</span>
+    <span class="badge">HTML/CSS/JS</span>
+    <span class="badge">SVG généré</span>
+  </div>
+</header>
 
-  <div class="game-card">
-    <h2>Dés du Destin</h2>
-    <p>Jeu coopératif de dés — 2 à 4 joueurs</p>
-    <p><em>v1.0 — pipeline initial</em></p>
-    <a class="play-btn" href="output/des-du-destin/index.html">▶ Jouer</a>
+<main>
+
+  <h2 class="section-title">🎮 Jeux générés</h2>
+
+  <div class="games-grid">
+
+    <div class="game-card">
+      <div class="card-header">
+        <div class="card-emoji">🎲</div>
+        <div class="card-title">Dés du Destin</div>
+        <div class="card-meta">2–4 joueurs · Coopératif · 30–45 min</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Combinez vos dés pour repousser des menaces avant
+          que la jauge de crise n'atteigne 10. Coordination
+          et gestion collective sont la clé.
+        </p>
+        <div class="card-tags">
+          <span class="tag">Dés</span>
+          <span class="tag">Coopératif</span>
+          <span class="tag">Pipeline v1</span>
+        </div>
+        <div class="card-actions">
+          <a href="output/des-du-destin/index.html" class="btn btn-play">▶ Jouer</a>
+          <a href="output/des-du-destin/rules.html" class="btn btn-rules">📖 Règles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div class="card-header">
+        <div class="card-emoji">⚔️</div>
+        <div class="card-title">Duel Tactique</div>
+        <div class="card-meta">2 joueurs · Stratégie · 15–30 min</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Commandez une armée asymétrique sur un plateau 8×8.
+          Capturez le Général ennemi grâce à vos Points d'Action
+          et votre sens tactique.
+        </p>
+        <div class="card-tags">
+          <span class="tag">Stratégie</span>
+          <span class="tag">Tour par tour</span>
+          <span class="tag">Pipeline v2</span>
+        </div>
+        <div class="card-actions">
+          <a href="output/duel-tactique/index.html" class="btn btn-play">▶ Jouer</a>
+          <a href="output/duel-tactique/rules.html" class="btn btn-rules">📖 Règles</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-card">
+      <div class="card-header">
+        <div class="card-emoji">🏝️</div>
+        <div class="card-title">Île Maudite</div>
+        <div class="card-meta">2–4 joueurs · Survie · 30–45 min</div>
+      </div>
+      <div class="card-body">
+        <p class="card-desc">
+          Explorez une île hostile avec 4 classes d'explorateurs.
+          Collectez ressources, gérez le brouillard de guerre
+          et construisez le radeau avant le tour 20.
+        </p>
+        <div class="card-tags">
+          <span class="tag">Survie</span>
+          <span class="tag">Exploration</span>
+          <span class="tag">Pipeline v2</span>
+        </div>
+        <div class="card-actions">
+          <a href="output/ile-maudite/index.html" class="btn btn-play">▶ Jouer</a>
+          <a href="output/ile-maudite/rules.html" class="btn btn-rules">📖 Règles</a>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <div class="game-card">
-    <h2>Duel Tactique</h2>
-    <p>Jeu de stratégie sur plateau — 2 joueurs</p>
-    <p><em>v2.0 — pipeline renforcé, 0 correction manuelle</em></p>
-    <a class="play-btn" href="output/duel-tactique/index.html">▶ Jouer</a>
+  <div class="pipeline-section">
+    <h2>🤖 Architecture du pipeline</h2>
+    <div class="pipeline-flow">
+      <div class="agent">
+        <div class="agent-name">Designer</div>
+        <div class="agent-role">Règles & mécaniques</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="agent">
+        <div class="agent-name">Developer</div>
+        <div class="agent-role">HTML/CSS/JS</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="agent">
+        <div class="agent-name">Asset Generator</div>
+        <div class="agent-role">SVG</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="agent">
+        <div class="agent-name">Tester</div>
+        <div class="agent-role">Validation & retry</div>
+      </div>
+      <span class="arrow">→</span>
+      <div class="agent">
+        <div class="agent-name">Documentalist</div>
+        <div class="agent-role">rules.md & README</div>
+      </div>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-item">
+        <strong>LangGraph</strong>
+        <span>Orchestration</span>
+      </div>
+      <div class="stack-item">
+        <strong>Claude Sonnet</strong>
+        <span>LLM × 5 agents</span>
+      </div>
+      <div class="stack-item">
+        <strong>Python 3.12</strong>
+        <span>Pipeline</span>
+      </div>
+      <div class="stack-item">
+        <strong>Vanilla JS</strong>
+        <span>Runtime jeu</span>
+      </div>
+      <div class="stack-item">
+        <strong>GitHub Actions</strong>
+        <span>CI/CD</span>
+      </div>
+      <div class="stack-item">
+        <strong>GitHub Pages</strong>
+        <span>Déploiement</span>
+      </div>
+    </div>
   </div>
 
-  <hr>
-  <p><a href="https://github.com/MalekSnous/boardgame-generator">
-    Voir le code source sur GitHub →</a></p>
+</main>
+
+<footer>
+  <a href="https://github.com/MalekSnous/boardgame-generator">
+    Voir le code source sur GitHub →
+  </a>
+  <br><br>
+  Généré par un pipeline LangGraph · 5 agents Claude Sonnet
+</footer>
+
 </body>
 </html>

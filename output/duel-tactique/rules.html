@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Duel Tactique — Règles</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Georgia, serif;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+      color: #1a1a2e;
+      background: #f8f7f2;
+      line-height: 1.7;
+    }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-family: sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: opacity .2s;
+    }
+    .btn:hover { opacity: .8; }
+    .btn-back { background: #e8e6df; color: #1a1a2e; }
+    .btn-play { background: #1d3557; color: white; }
+    h1 { font-size: 2.2rem; margin-bottom: 8px; color: #1d3557; }
+    .subtitle { font-style: italic; color: #666; margin-bottom: 40px; font-size: 1.05rem; }
+    h2 { font-size: 1.3rem; margin: 36px 0 12px; color: #1d3557; border-bottom: 2px solid #e8e6df; padding-bottom: 6px; }
+    h3 { margin: 20px 0 8px; color: #333; }
+    p { margin-bottom: 14px; }
+    ul, ol { margin: 0 0 14px 24px; }
+    li { margin-bottom: 6px; }
+    table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 0.95rem; }
+    th, td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+    th { background: #1d3557; color: white; }
+    tr:nth-child(even) { background: #f0ede6; }
+    blockquote { border-left: 4px solid #1d3557; padding: 8px 16px; margin: 16px 0; background: #eef2f7; border-radius: 0 6px 6px 0; font-style: italic; }
+    hr { border: none; border-top: 1px solid #e8e6df; margin: 24px 0; }
+    .play-banner { text-align: center; margin: 48px 0 16px; padding: 32px; background: #1d3557; border-radius: 12px; }
+    .play-banner p { color: #a8dadc; margin-bottom: 16px; font-family: sans-serif; }
+    .btn-play-large { display: inline-block; padding: 14px 40px; background: #e63946; color: white; border-radius: 8px; text-decoration: none; font-size: 1.1rem; font-weight: 700; font-family: sans-serif; }
+    .btn-play-large:hover { background: #c1121f; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="../../index.html" class="btn btn-back">← Tous les jeux</a>
+    <a href="index.html" class="btn btn-play">▶ Jouer maintenant</a>
+  </nav>
+
+  <h1>⚔️ Duel Tactique</h1>
+  <p class="subtitle">Un jeu d'affrontement pour 2 joueurs — Durée : 20 à 40 minutes</p>
+
+  <p>Duel Tactique est un jeu d'affrontement pour <strong>2 joueurs</strong> où chaque décision compte. Déplacez vos pièces avec ruse, tendez des pièges à votre adversaire et protégez votre drapeau coûte que coûte. Facile à apprendre, difficile à maîtriser !</p>
+
+  <hr>
+
+  <h2>Composants</h2>
+  <ul>
+    <li>1 plateau de jeu <strong>8×8 cases</strong></li>
+    <li>2 <strong>Drapeaux</strong> (1 par joueur — pièce fixe)</li>
+    <li>Par joueur : <strong>6 Soldats</strong>, <strong>3 Cavaliers</strong>, <strong>2 Tours</strong>, <strong>1 Général</strong></li>
+    <li>30 <strong>cartes Action</strong> : 10 Bouclier, 10 Sprint, 10 Piège</li>
+    <li>4 <strong>tuiles Terrain spécial</strong> : Forêt <em>(+1 en défense)</em> et Marais <em>(−1 en déplacement)</em></li>
+    <li>1 <strong>marqueur Premier Joueur</strong></li>
+  </ul>
+
+  <hr>
+
+  <h2>Mise en place</h2>
+  <ol>
+    <li>Placez le plateau entre les deux joueurs.</li>
+    <li>Disposez les 4 tuiles Terrain spécial sur les cases de votre choix, en alternance avec l'adversaire.</li>
+    <li>Chaque joueur installe ses pièces sur ses <strong>deux premières rangées</strong>, en plaçant le Drapeau en dernier — à l'abri, mais sans le cacher.</li>
+    <li>Mélangez les cartes Action et distribuez <strong>3 cartes</strong> à chaque joueur.</li>
+    <li>Le joueur avec le marqueur Premier Joueur commence.</li>
+  </ol>
+
+  <hr>
+
+  <h2>Déroulement d'un tour</h2>
+  <p>À chaque tour, suivez ces étapes dans l'ordre :</p>
+  <ol>
+    <li><strong>Piochez</strong> 1 carte Action <em>(maximum 3 cartes en main)</em>.</li>
+    <li><strong>Choisissez</strong> l'une de vos pièces sur le plateau.</li>
+    <li><strong>Déplacez-la</strong> selon ses capacités :
+      <ul>
+        <li><em>Soldat</em> → 1 case orthogonale</li>
+        <li><em>Cavalier</em> → jusqu'à 3 cases en L</li>
+        <li><em>Tour</em> → jusqu'à 3 cases en ligne droite</li>
+        <li><em>Général</em> → 1 case dans n'importe quelle direction</li>
+      </ul>
+    </li>
+    <li><strong>Résolvez le combat</strong> si votre pièce atterrit sur une case adverse : la pièce avec la valeur de combat la plus haute capture l'autre. En cas d'égalité, les deux pièces sont retirées du plateau.</li>
+    <li><strong>Jouez une carte Action</strong> <em>(facultatif)</em> pour déclencher un effet :
+      <ul>
+        <li>🛡️ <em>Bouclier</em> — annule la capture de l'une de vos pièces ce tour</li>
+        <li>⚡ <em>Sprint</em> — accordez un déplacement bonus à la pièce activée</li>
+        <li>🪤 <em>Piège</em> — posez un piège invisible sur une case vide</li>
+      </ul>
+    </li>
+    <li><strong>Annoncez la fin de votre tour</strong> — l'adversaire prend la main.</li>
+  </ol>
+
+  <hr>
+
+  <h2>Conditions de victoire</h2>
+  <p>Vous remportez la partie si :</p>
+  <ul>
+    <li>vous <strong>capturez le Drapeau adverse</strong>, ou</li>
+    <li>vous <strong>éliminez toutes les pièces mobiles</strong> de l'adversaire.</li>
+  </ul>
+  <p>Un joueur qui n'a plus aucune carte Action <strong>ni</strong> aucune pièce capable de bouger <strong>perd par blocage</strong>.</p>
+
+  <hr>
+
+  <h2>Conseils stratégiques</h2>
+  <ul>
+    <li><strong>Cachez vos intentions</strong> : les cartes Piège sont redoutables pour protéger votre Drapeau sans dévoiler votre stratégie.</li>
+    <li><strong>Le Général est précieux</strong> — ne le sacrifiez pas trop tôt, mais n'hésitez pas à l'utiliser pour des captures décisives.</li>
+    <li><strong>Contrôlez le terrain</strong> : positionnez vos pièces sur les tuiles Forêt pour renforcer leur résistance au combat.</li>
+    <li><strong>Gérez vos cartes</strong> : dépenser trop de Sprints tôt peut vous laisser sans ressources au moment crucial.</li>
+  </ul>
+
+  <div class="play-banner">
+    <p>Prêt à jouer ? Le jeu tourne entièrement dans le navigateur.</p>
+    <a href="index.html" class="btn-play-large">⚔️ Lancer la partie</a>
+  </div>
+</body>
+</html>
